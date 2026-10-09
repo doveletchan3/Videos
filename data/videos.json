@@ -4,10 +4,10 @@
     "title": "地獄大狀",
     "poster": "data/posters/1023732.jpg",
     "category": "劇集",
-    "subcategory": "國產劇",
+    "subcategory": "港劇",
     "tags": [
       "熱門",
-      "國產劇",
+      "港劇",
       "中國香港"
     ],
     "details": {
@@ -58,31 +58,27 @@
         ]
       },
       {
-        "source_index": 11,
-        "source_id": "21415076",
-        "name": "線路11",
-        "episode_count": 4,
+        "source_index": 10,
+        "source_id": "21414969",
+        "name": "線路10",
+        "episode_count": 3,
         "episodes": [
           {
             "name": "第01集",
-            "url": "https://bfikuncdn.com/20261007/qm0roNml/index.m3u8"
+            "url": "https://v13.rstu6.com/202610/07/JER26iEdEu27/video/index.m3u8"
           },
           {
             "name": "第02集",
-            "url": "https://bfikuncdn.com/20261007/DTeUaVpN/index.m3u8"
+            "url": "https://v13.rstu6.com/202610/07/WWvnpP45m627/video/index.m3u8"
           },
           {
             "name": "第03集",
-            "url": "https://bfikuncdn.com/20261007/AJqbKyL2/index.m3u8"
-          },
-          {
-            "name": "第04集",
-            "url": "https://bfikuncdn.com/20261008/X3VmJAz6/index.m3u8"
+            "url": "https://v14.rstu6.com/202610/08/172gYrHJKd27/video/index.m3u8"
           }
         ]
       }
     ],
-    "updatedAt": "2026-10-08T20:47:13.558796"
+    "updatedAt": "2026-10-08T21:10:42.052911"
   },
   {
     "id": "384246",
