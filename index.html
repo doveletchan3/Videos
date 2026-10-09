@@ -162,6 +162,13 @@
       renderCategorySubFilterUI();
       renderYearFilterUI();
       await refreshVideoList();
+
+      // Auto-refresh library when returning to app on TV Box or switching back to tab
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          refreshVideoList();
+        }
+      });
     });
 
     function updateNavActive() {

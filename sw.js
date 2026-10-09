@@ -1,5 +1,5 @@
 // Videos App - Service Worker for PWA & Android TV
-const CACHE_NAME = 'videos-cache-v1';
+const CACHE_NAME = 'videos-cache-v2';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
@@ -47,8 +47,15 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // For video streams (.m3u8, .ts, etc.), always fetch directly from network without caching
-  if (event.request.url.includes('.m3u8') || event.request.url.includes('.ts')) {
+  // Always bypass Service Worker for video streams, videos.json data, API calls, and cache-busting requests
+  if (
+    event.request.url.includes('.m3u8') ||
+    event.request.url.includes('.ts') ||
+    event.request.url.includes('videos.json') ||
+    event.request.url.includes('/api/') ||
+    event.request.url.includes('refresh=') ||
+    event.request.url.includes('?t=')
+  ) {
     return;
   }
 

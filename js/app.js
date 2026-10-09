@@ -36,15 +36,22 @@ const ROBOT_LOGO_SVG = `
 
 // Fetch video library from static json or local server
 async function loadVideos() {
+  const ts = Date.now();
   const tryUrls = [
-    APP_CONFIG.DATA_URL + '?t=' + Date.now(),
-    'http://localhost:8080/api/videos',
-    'http://127.0.0.1:8080/api/videos'
+    APP_CONFIG.DATA_URL + '?t=' + ts,
+    'http://localhost:8080/api/videos?t=' + ts,
+    'http://127.0.0.1:8080/api/videos?t=' + ts
   ];
 
   for (const url of tryUrls) {
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache'
+        }
+      });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) return data;
@@ -132,7 +139,28 @@ function initCommonHeader(activeNav = 'home') {
   const brandEl = document.querySelector('.brand-logo');
   if (brandEl) {
     brandEl.innerHTML = BRAND_LOGO_HTML;
-    brandEl.onclick = () => window.location.href = 'index.html';
+    brandEl.style.cursor = 'pointer';
+    brandEl.title = '點擊刷新頁面與影片庫';
+    brandEl.setAttribute('role', 'button');
+    brandEl.setAttribute('tabindex', '0');
+
+    const triggerRefresh = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const logoImg = brandEl.querySelector('img');
+      if (logoImg) logoImg.classList.add('spinning');
+      // Force cache-busting page reload
+      window.location.href = 'index.html?t=' + Date.now();
+    };
+
+    brandEl.onclick = triggerRefresh;
+    brandEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        triggerRefresh(e);
+      }
+    });
   }
 
   // Bind search form
