@@ -188,6 +188,13 @@
       renderFilteredVideos();
     }
 
+    function getVideoYear(v) {
+      if (!v) return 0;
+      const yStr = String((v.details && v.details.year) || v.year || '').trim();
+      const m = yStr.match(/\d{4}/);
+      return m ? parseInt(m[0], 10) : 0;
+    }
+
     function renderFilteredVideos() {
       const grid = document.getElementById('videoGrid');
       const emptyState = document.getElementById('emptyState');
@@ -235,6 +242,22 @@
         });
       }
 
+      // Sort by year of production descending (newest production year first)
+      filtered.sort((a, b) => {
+        const yearA = getVideoYear(a);
+        const yearB = getVideoYear(b);
+        if (yearB !== yearA) {
+          return yearB - yearA; // Higher year first (e.g. 2026 before 2025)
+        }
+        // Tie-breaker: updatedAt descending (newest updated/added first)
+        const timeA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const timeB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        if (timeB !== timeA) {
+          return timeB - timeA;
+        }
+        return (parseInt(b.id, 10) || 0) - (parseInt(a.id, 10) || 0);
+      });
+
       badge.textContent = `共 ${filtered.length} 部`;
 
       if (filtered.length === 0) {
@@ -265,11 +288,14 @@
           epBadge = epCount > 1 ? `更新至${epCount}集` : (epCount === 1 ? '全1集' : '正片');
         }
 
+        const yearVal = getVideoYear(video);
+        const yearBadge = yearVal > 0 ? `<span class="poster-year-badge">${yearVal}</span>` : '';
         const posterUrl = video.poster || APP_CONFIG.DEFAULT_FALLBACK_POSTER;
 
         card.innerHTML = `
           <div class="poster-wrap">
             <img src="${posterUrl}" alt="${video.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='${APP_CONFIG.DEFAULT_FALLBACK_POSTER}'">
+            ${yearBadge}
             ${epBadge ? `<span class="poster-badge">${epBadge}</span>` : ''}
           </div>
           <div class="video-card-title" title="${video.title}">${video.title}</div>
