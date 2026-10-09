@@ -1,5 +1,538 @@
 [
   {
+    "id": "965344",
+    "title": "逐玉",
+    "poster": "data/posters/965344.jpg",
+    "category": "劇集",
+    "subcategory": "國產劇",
+    "tags": [
+      "熱門",
+      "國產劇",
+      "中國大陸"
+    ],
+    "details": {
+      "alias": "Pursuit of Jade",
+      "year": "2026",
+      "region": "中國大陸",
+      "actors": "曾慶傑/田曦薇,張凌赫,任豪,孔雪兒,鄧凱"
+    },
+    "sources": [
+      {
+        "source_index": 1,
+        "source_id": "20827484",
+        "name": "線路1",
+        "episode_count": 41,
+        "episodes": [
+          {
+            "name": "第1集",
+            "url": "https://play.xluuss.com/play/b686kv7e/index.m3u8"
+          },
+          {
+            "name": "第2集",
+            "url": "https://play.xluuss.com/play/aQW1V27d/index.m3u8"
+          },
+          {
+            "name": "第3集",
+            "url": "https://play.xluuss.com/play/aKrOM2re/index.m3u8"
+          },
+          {
+            "name": "第4集",
+            "url": "https://play.xluuss.com/play/eZ645ove/index.m3u8"
+          },
+          {
+            "name": "第5集",
+            "url": "https://play.xluuss.com/play/b8268ome/index.m3u8"
+          },
+          {
+            "name": "第6集",
+            "url": "https://play.xluuss.com/play/eZ64l96e/index.m3u8"
+          },
+          {
+            "name": "第7集",
+            "url": "https://play.xluuss.com/play/aKrOWyne/index.m3u8"
+          },
+          {
+            "name": "第8集",
+            "url": "https://play.xluuss.com/play/eXD6mJke/index.m3u8"
+          },
+          {
+            "name": "第9集",
+            "url": "https://play.xluuss.com/play/aOY7Vwgd/index.m3u8"
+          },
+          {
+            "name": "第10集",
+            "url": "https://play.xluuss.com/play/elY5YXra/index.m3u8"
+          },
+          {
+            "name": "第11集",
+            "url": "https://play.xluuss.com/play/b8262WLe/index.m3u8"
+          },
+          {
+            "name": "第12集",
+            "url": "https://play.xluuss.com/play/aQW01nMd/index.m3u8"
+          },
+          {
+            "name": "第13集",
+            "url": "https://play.xluuss.com/play/b68R6XLe/index.m3u8"
+          },
+          {
+            "name": "第14集",
+            "url": "https://play.xluuss.com/play/e0RVVgvb/index.m3u8"
+          },
+          {
+            "name": "第15集",
+            "url": "https://play.xluuss.com/play/b4xRR81b/index.m3u8"
+          },
+          {
+            "name": "第16集",
+            "url": "https://play.xluuss.com/play/b68RX27e/index.m3u8"
+          },
+          {
+            "name": "第17集",
+            "url": "https://play.xluuss.com/play/ejRqZLWe/index.m3u8"
+          },
+          {
+            "name": "第18集",
+            "url": "https://play.xluuss.com/play/dwpm0zXe/index.m3u8"
+          },
+          {
+            "name": "第19集",
+            "url": "https://play.xluuss.com/play/en5rR0pd/index.m3u8"
+          },
+          {
+            "name": "第20集",
+            "url": "https://play.xluuss.com/play/epYQkAXa/index.m3u8"
+          },
+          {
+            "name": "第21集",
+            "url": "https://play.xluuss.com/play/ejRq0rYe/index.m3u8"
+          },
+          {
+            "name": "第22集",
+            "url": "https://play.xluuss.com/play/bDk98rKa/index.m3u8"
+          },
+          {
+            "name": "第23集",
+            "url": "https://play.xluuss.com/play/dwpmr58e/index.m3u8"
+          },
+          {
+            "name": "第24集",
+            "url": "https://play.xluuss.com/play/dwpmkkRe/index.m3u8"
+          },
+          {
+            "name": "第25集",
+            "url": "https://play.xluuss.com/play/dG65YW0b/index.m3u8"
+          },
+          {
+            "name": "第26集",
+            "url": "https://play.xluuss.com/play/eVOP0ooa/index.m3u8"
+          },
+          {
+            "name": "第27集",
+            "url": "https://play.xluuss.com/play/e1wr2DPb/index.m3u8"
+          },
+          {
+            "name": "第28集",
+            "url": "https://play.xluuss.com/play/eZ6VvLwe/index.m3u8"
+          },
+          {
+            "name": "第29集",
+            "url": "https://play.xluuss.com/play/b2kvDPjd/index.m3u8"
+          },
+          {
+            "name": "第30集",
+            "url": "https://play.xluuss.com/play/eVOPnqBa/index.m3u8"
+          },
+          {
+            "name": "第31集",
+            "url": "https://play.xluuss.com/play/egJLrN3d/index.m3u8"
+          },
+          {
+            "name": "第32集",
+            "url": "https://play.xluuss.com/play/e73Ljkre/index.m3u8"
+          },
+          {
+            "name": "第33集",
+            "url": "https://play.xluuss.com/play/dPNZPAWa/index.m3u8"
+          },
+          {
+            "name": "第33集",
+            "url": "https://play.xluuss.com/play/en5r6K5d/index.m3u8"
+          },
+          {
+            "name": "第34集",
+            "url": "https://play.xluuss.com/play/bYEv2Nnb/index.m3u8"
+          },
+          {
+            "name": "第35集",
+            "url": "https://play.xluuss.com/play/bkRZyPEa/index.m3u8"
+          },
+          {
+            "name": "第36集",
+            "url": "https://play.xluuss.com/play/e5y96Xve/index.m3u8"
+          },
+          {
+            "name": "第37集",
+            "url": "https://play.xluuss.com/play/bqxYG9Ga/index.m3u8"
+          },
+          {
+            "name": "第38集",
+            "url": "https://play.xluuss.com/play/azpKRymd/index.m3u8"
+          },
+          {
+            "name": "第39集",
+            "url": "https://play.xluuss.com/play/dJ6qJrPd/index.m3u8"
+          },
+          {
+            "name": "第40集已完結",
+            "url": "https://play.xluuss.com/play/bo2QDk3a/index.m3u8"
+          }
+        ]
+      },
+      {
+        "source_index": 2,
+        "source_id": "20827475",
+        "name": "線路2",
+        "episode_count": 41,
+        "episodes": [
+          {
+            "name": "第1集",
+            "url": "https://v.gsuus.com/play/e5y8jrxe/index.m3u8"
+          },
+          {
+            "name": "第2集",
+            "url": "https://v.gsuus.com/play/dPN1R9za/index.m3u8"
+          },
+          {
+            "name": "第3集",
+            "url": "https://v.gsuus.com/play/dJ6ZL2Dd/index.m3u8"
+          },
+          {
+            "name": "第4集",
+            "url": "https://v.gsuus.com/play/bYE64n0b/index.m3u8"
+          },
+          {
+            "name": "第5集",
+            "url": "https://v.gsuus.com/play/e73L8nje/index.m3u8"
+          },
+          {
+            "name": "第6集",
+            "url": "https://v.gsuus.com/play/bYE6k9pb/index.m3u8"
+          },
+          {
+            "name": "第7集",
+            "url": "https://v.gsuus.com/play/dJ6ZVxod/index.m3u8"
+          },
+          {
+            "name": "第8集",
+            "url": "https://v.gsuus.com/play/bW6nkGWa/index.m3u8"
+          },
+          {
+            "name": "第9集",
+            "url": "https://v.gsuus.com/play/dNkxQvLe/index.m3u8"
+          },
+          {
+            "name": "第10集",
+            "url": "https://v.gsuus.com/play/bkRZRBEa/index.m3u8"
+          },
+          {
+            "name": "第11集",
+            "url": "https://v.gsuus.com/play/e73L3Yre/index.m3u8"
+          },
+          {
+            "name": "第12集",
+            "url": "https://v.gsuus.com/play/dPNZ17ya/index.m3u8"
+          },
+          {
+            "name": "第13集",
+            "url": "https://v.gsuus.com/play/e5y98Qqe/index.m3u8"
+          },
+          {
+            "name": "第14集",
+            "url": "https://v.gsuus.com/play/e9rQQ8xa/index.m3u8"
+          },
+          {
+            "name": "第15集",
+            "url": "https://v.gsuus.com/play/e3122lMb/index.m3u8"
+          },
+          {
+            "name": "第16集",
+            "url": "https://v.gsuus.com/play/e5y9Q3xe/index.m3u8"
+          },
+          {
+            "name": "第17集",
+            "url": "https://v.gsuus.com/play/egJLZ69d/index.m3u8"
+          },
+          {
+            "name": "第18集",
+            "url": "https://v.gsuus.com/play/av2oQyna/index.m3u8"
+          },
+          {
+            "name": "第19集",
+            "url": "https://v.gsuus.com/play/bmZQqm3d/index.m3u8"
+          },
+          {
+            "name": "第20集",
+            "url": "https://v.gsuus.com/play/bo2QjzAa/index.m3u8"
+          },
+          {
+            "name": "第21集",
+            "url": "https://v.gsuus.com/play/egJLnoZd/index.m3u8"
+          },
+          {
+            "name": "第22集",
+            "url": "https://v.gsuus.com/play/dBBL6pYd/index.m3u8"
+          },
+          {
+            "name": "第23集",
+            "url": "https://v.gsuus.com/play/av2oZ55a/index.m3u8"
+          },
+          {
+            "name": "第24集",
+            "url": "https://v.gsuus.com/play/av2ojjma/index.m3u8"
+          },
+          {
+            "name": "第25集",
+            "url": "https://v.gsuus.com/play/eER9ZWka/index.m3u8"
+          },
+          {
+            "name": "第26集",
+            "url": "https://v.gsuus.com/play/dR6o5kwd/index.m3u8"
+          },
+          {
+            "name": "第27集",
+            "url": "https://v.gsuus.com/play/eZ6V3RRe/index.m3u8"
+          },
+          {
+            "name": "第28集",
+            "url": "https://v.gsuus.com/play/bYEvrKMb/index.m3u8"
+          },
+          {
+            "name": "第29集",
+            "url": "https://v.gsuus.com/play/e1wr3O0b/index.m3u8"
+          },
+          {
+            "name": "第30集",
+            "url": "https://v.gsuus.com/play/dR6ojmzd/index.m3u8"
+          },
+          {
+            "name": "第31集",
+            "url": "https://v.gsuus.com/play/e0RV1PKb/index.m3u8"
+          },
+          {
+            "name": "第32集",
+            "url": "https://v.gsuus.com/play/b68Rgjle/index.m3u8"
+          },
+          {
+            "name": "第33集",
+            "url": "https://v.gsuus.com/play/aOYyOzLd/index.m3u8"
+          },
+          {
+            "name": "第33集",
+            "url": "https://v.gsuus.com/play/bmZQNJRd/index.m3u8"
+          },
+          {
+            "name": "第34集",
+            "url": "https://v.gsuus.com/play/eXDo12Ae/index.m3u8"
+          },
+          {
+            "name": "第35集",
+            "url": "https://v.gsuus.com/play/ejRqxPle/index.m3u8"
+          },
+          {
+            "name": "第36集",
+            "url": "https://v.gsuus.com/play/b4xR5Pnb/index.m3u8"
+          },
+          {
+            "name": "第37集",
+            "url": "https://v.gsuus.com/play/epYQEPNa/index.m3u8"
+          },
+          {
+            "name": "第38集",
+            "url": "https://v.gsuus.com/play/dyPr0xPb/index.m3u8"
+          },
+          {
+            "name": "第39集",
+            "url": "https://v.gsuus.com/play/dG65Do8b/index.m3u8"
+          },
+          {
+            "name": "第40集已完結",
+            "url": "https://v.gsuus.com/play/en5rBjEd/index.m3u8"
+          }
+        ]
+      },
+      {
+        "source_index": 17,
+        "source_id": "20993318",
+        "name": "線路17",
+        "episode_count": 40,
+        "episodes": [
+          {
+            "name": "第01集",
+            "url": "https://b3.bdzybf22.com/videos/202603/06/69aab8fb378422441c27c014/b25g6f/index.m3u8"
+          },
+          {
+            "name": "第02集",
+            "url": "https://b3.bdzybf22.com/videos/202603/06/69aab8f0378422441c27bfc5/311300/index.m3u8"
+          },
+          {
+            "name": "第03集",
+            "url": "https://b3.bdzybf22.com/videos/202603/06/69aab904378422441c27c045/690ed2/index.m3u8"
+          },
+          {
+            "name": "第04集",
+            "url": "https://b3.bdzybf22.com/videos/202603/06/69aab918378422441c27c065/6g1816/index.m3u8"
+          },
+          {
+            "name": "第05集",
+            "url": "https://b3.bdzybf22.com/videos/202603/06/69aab90f378422441c27c064/1be3d1/index.m3u8"
+          },
+          {
+            "name": "第06集",
+            "url": "https://b3.bdzybf22.com/videos/202603/07/69ac1bf00dc288440de9801a/0a7c82/index.m3u8"
+          },
+          {
+            "name": "第07集",
+            "url": "https://b3.bdzybf22.com/videos/202603/07/69ac1bfa0dc288440de98051/1a662a/index.m3u8"
+          },
+          {
+            "name": "第08集",
+            "url": "https://b3.bdzybf22.com/videos/202603/08/69ad6e040dc288440dee8443/2e83da/index.m3u8"
+          },
+          {
+            "name": "第09集",
+            "url": "https://b3.bdzybf22.com/videos/202603/08/69ad6e4d0dc288440dee845e/038e5f/index.m3u8"
+          },
+          {
+            "name": "第10集",
+            "url": "https://b3.bdzybf22.com/videos/202603/09/69aeabdc378422441c34fc83/g2a9dc/index.m3u8"
+          },
+          {
+            "name": "第11集",
+            "url": "https://b3.bdzybf22.com/videos/202603/09/69aeabc3378422441c34fc3f/ca43e7/index.m3u8"
+          },
+          {
+            "name": "第12集",
+            "url": "https://b3.bdzybf22.com/videos/202603/10/69b0040e0dc288440df3cad2/6e443b/index.m3u8"
+          },
+          {
+            "name": "第13集",
+            "url": "https://b3.bdzybf22.com/videos/202603/10/69b0040e0dc288440df3cad3/3decf1/index.m3u8"
+          },
+          {
+            "name": "第14集",
+            "url": "https://b3.bdzybf22.com/videos/202603/19/69bbfabff6eb791610bb9b27/d1c8c2/index.m3u8"
+          },
+          {
+            "name": "第15集",
+            "url": "https://b3.bdzybf22.com/videos/202603/19/69bbfab0f6eb791610bb9b16/aeb2ab/index.m3u8"
+          },
+          {
+            "name": "第16集",
+            "url": "https://b3.bdzybf22.com/videos/202603/19/69bbfac585514616197cb07e/d5fb86/index.m3u8"
+          },
+          {
+            "name": "第17集",
+            "url": "https://b3.bdzybf22.com/videos/202603/12/69b2a6e40dc288440dfa0dbe/f2bggb/index.m3u8"
+          },
+          {
+            "name": "第18集",
+            "url": "https://b3.bdzybf22.com/videos/202603/13/69b411900dc288440dfdde78/6ea146/index.m3u8"
+          },
+          {
+            "name": "第19集",
+            "url": "https://b3.bdzybf22.com/videos/202603/13/69b411640dc288440dfdde5f/affd21/index.m3u8"
+          },
+          {
+            "name": "第20集",
+            "url": "https://b3.bdzybf22.com/videos/202603/14/69b54dbb0dc288440d04ec57/4g9255/index.m3u8"
+          },
+          {
+            "name": "第21集",
+            "url": "https://b3.bdzybf22.com/videos/202603/14/69b54dc80dc288440d04ec70/76eecc/index.m3u8"
+          },
+          {
+            "name": "第22集",
+            "url": "https://b3.bdzybf22.com/videos/202603/15/69b6acb6378422441c4ef81e/7ag791/index.m3u8"
+          },
+          {
+            "name": "第23集",
+            "url": "https://b3.bdzybf22.com/videos/202603/15/69b6acc3378422441c4ef831/0gad2e/index.m3u8"
+          },
+          {
+            "name": "第24集",
+            "url": "https://b3.bdzybf22.com/videos/202603/16/69b80907378422441c53eec3/b0f7e6/index.m3u8"
+          },
+          {
+            "name": "第25集",
+            "url": "https://b3.bdzybf22.com/videos/202603/17/69b93d850dc288440d10e9f1/b18472/index.m3u8"
+          },
+          {
+            "name": "第26集",
+            "url": "https://b3.bdzybf22.com/videos/202603/18/69ba96f0378422441c5a5ae4/26gd7d/index.m3u8"
+          },
+          {
+            "name": "第27集",
+            "url": "https://b3.bdzybf22.com/videos/202603/19/69bbd2210dc288440d175b14/f7fa26/index.m3u8"
+          },
+          {
+            "name": "第28集",
+            "url": "https://b3.bdzybf22.com/videos/202603/20/69bd3fed378422441c609681/10ccff/index.m3u8"
+          },
+          {
+            "name": "第29集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69be9857378422441c6491fc/e39c23/index.m3u8"
+          },
+          {
+            "name": "第30集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69be984e378422441c6491fa/79eb3e/index.m3u8"
+          },
+          {
+            "name": "第31集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb676378422441c6537d0/2gagff/index.m3u8"
+          },
+          {
+            "name": "第32集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb611378422441c65378c/cd6c58/index.m3u8"
+          },
+          {
+            "name": "第33集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb62f378422441c653795/4f19dd/index.m3u8"
+          },
+          {
+            "name": "第34集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb658378422441c6537bb/e294e8/index.m3u8"
+          },
+          {
+            "name": "第35集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb680378422441c6537d7/13f91f/index.m3u8"
+          },
+          {
+            "name": "第36集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb625378422441c653794/7d8d6c/index.m3u8"
+          },
+          {
+            "name": "第37集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb662378422441c6537ce/c1a5c4/index.m3u8"
+          },
+          {
+            "name": "第38集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb61b378422441c653793/b2e234/index.m3u8"
+          },
+          {
+            "name": "第39集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb66b378422441c6537cf/3ddb99/index.m3u8"
+          },
+          {
+            "name": "第40集",
+            "url": "https://b3.bdzybf22.com/videos/202603/21/69beb63a378422441c6537a0/6dfb1a/index.m3u8"
+          }
+        ]
+      }
+    ],
+    "updatedAt": "2026-10-09T12:12:52.599097"
+  },
+  {
     "id": "1009386",
     "title": "早春晴朗",
     "poster": "data/posters/1009386.jpg",
