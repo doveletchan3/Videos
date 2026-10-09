@@ -53,9 +53,22 @@
           <span id="videoCountBadge" style="font-size: 13px; color: #888;">共 0 部</span>
         </div>
 
-        <!-- Subcategory Filter Strip -->
-        <div id="subcategoryFilterBar" class="subcat-filter-bar" style="margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 8px;">
-          <!-- Dynamically populated -->
+        <!-- Multi-Dimensional Filter Box (Type & Year) -->
+        <div class="filter-panel" style="background: #fafbfc; border: 1px solid #edf2f7; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;">
+          <!-- Type / Subcategory Row -->
+          <div class="filter-row" style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
+            <span class="filter-label" style="font-size: 13px; font-weight: bold; color: #475569; padding-top: 4px; min-width: 48px;">類型：</span>
+            <div id="subcategoryFilterBar" style="display: flex; flex-wrap: wrap; gap: 6px; flex: 1;">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+          <!-- Year Row -->
+          <div class="filter-row" style="display: flex; align-items: flex-start; gap: 10px;">
+            <span class="filter-label" style="font-size: 13px; font-weight: bold; color: #475569; padding-top: 4px; min-width: 48px;">年份：</span>
+            <div id="yearFilterBar" style="display: flex; flex-wrap: wrap; gap: 6px; flex: 1;">
+              <!-- Dynamically populated years -->
+            </div>
+          </div>
         </div>
 
         <!-- Video Cards Container -->
@@ -112,12 +125,18 @@
     let allVideos = [];
     let currentCategory = 'all';
     let currentTag = '全部';
+    let currentYear = '全部年份';
     let searchQuery = '';
 
     const SUBCATEGORIES = {
       "劇集": ["全部", "國產劇", "美劇", "英劇", "韓劇", "日劇", "港劇", "日本動畫", "綜藝", "紀錄片"],
       "電影": ["全部", "最新", "經典", "華語", "歐美", "韓國", "日本", "動作", "喜劇", "愛情", "科幻", "懸疑", "恐怖"]
     };
+
+    const YEARS = [
+      "全部年份", "2026", "2025", "2024", "2023", "2022", "2021",
+      "2020", "2019", "2018", "2017", "2016", "2015", "更早"
+    ];
 
     document.addEventListener('DOMContentLoaded', async () => {
       initCommonHeader('home');
@@ -141,6 +160,7 @@
       }
 
       renderCategorySubFilterUI();
+      renderYearFilterUI();
       await refreshVideoList();
     });
 
@@ -181,6 +201,19 @@
           const detailsStr = v.details ? Object.values(v.details).join(' ') : '';
           const fullMeta = `${sub} ${tags} ${detailsStr} ${v.title} ${v.category || ''}`;
           return fullMeta.includes(currentTag);
+        });
+      }
+
+      // Year filter
+      if (currentYear !== '全部年份') {
+        filtered = filtered.filter(v => {
+          const y = String((v.details && v.details.year) || v.year || '').trim();
+          if (!y) return false;
+          if (currentYear === '更早') {
+            const m = y.match(/\d{4}/);
+            return m ? parseInt(m[0], 10) < 2015 : false;
+          }
+          return y.includes(currentYear);
         });
       }
 
@@ -257,20 +290,16 @@
 
       // Render top subcat strip
       if (subcatBar) {
-        if (currentCategory === 'all') {
-          subcatBar.style.display = 'none';
-        } else {
-          subcatBar.style.display = 'flex';
-          subcatBar.innerHTML = '';
-          tagList.forEach(t => {
-            const btn = document.createElement('span');
-            btn.className = 'tag-pill' + (t === currentTag ? ' active' : '');
-            btn.textContent = t;
-            btn.style.cursor = 'pointer';
-            btn.onclick = () => filterTag(t);
-            subcatBar.appendChild(btn);
-          });
-        }
+        subcatBar.style.display = 'flex';
+        subcatBar.innerHTML = '';
+        tagList.forEach(t => {
+          const btn = document.createElement('span');
+          btn.className = 'tag-pill' + (t === currentTag ? ' active' : '');
+          btn.textContent = t;
+          btn.style.cursor = 'pointer';
+          btn.onclick = () => filterTag(t);
+          subcatBar.appendChild(btn);
+        });
       }
 
       // Render sidebar tag cloud
@@ -287,11 +316,33 @@
       }
     }
 
+    function renderYearFilterUI() {
+      const yearBar = document.getElementById('yearFilterBar');
+      if (!yearBar) return;
+      yearBar.innerHTML = '';
+      YEARS.forEach(yr => {
+        const btn = document.createElement('span');
+        btn.className = 'tag-pill' + (yr === currentYear ? ' active' : '');
+        btn.textContent = yr;
+        btn.style.cursor = 'pointer';
+        btn.onclick = () => filterYear(yr);
+        yearBar.appendChild(btn);
+      });
+    }
+
+    function filterYear(yr) {
+      currentYear = yr;
+      renderYearFilterUI();
+      renderFilteredVideos();
+    }
+
     function filterCategory(cat, el) {
       currentCategory = cat;
       currentTag = '全部';
+      currentYear = '全部年份';
       updateNavActive();
       renderCategorySubFilterUI();
+      renderYearFilterUI();
       renderFilteredVideos();
     }
 
