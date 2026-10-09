@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
-  <title>正在播放 - 视频流媒体</title>
+  <title>正在播放 - 視頻流媒體</title>
   <link rel="stylesheet" href="css/style.css">
   <!-- Hls.js for smooth .m3u8 streaming across all browsers -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
@@ -15,10 +15,10 @@
   <header class="site-header">
     <div class="container">
       <div class="header-top">
-        <a href="index.html" class="brand-logo" title="返回首页"></a>
+        <a href="index.html" class="brand-logo" title="返回首頁"></a>
         <div class="search-box-wrap">
           <form id="searchForm" class="search-form">
-            <input type="text" id="searchInput" class="search-input" placeholder="请输入影片、短剧、演职人员" autocomplete="off">
+            <input type="text" id="searchInput" class="search-input" placeholder="請輸入影片、短劇、演職人員" autocomplete="off">
             <button type="submit" class="search-btn">搜索</button>
           </form>
         </div>
@@ -30,11 +30,11 @@
   <nav class="sub-nav">
     <div class="container">
       <ul class="nav-links">
-        <li><a href="index.html">首页</a></li>
-        <li><a href="index.html?cat=电影">电影</a></li>
-        <li><a href="index.html?cat=剧集">剧集</a></li>
+        <li><a href="index.html">首頁</a></li>
+        <li><a href="index.html?cat=電影">電影</a></li>
+        <li><a href="index.html?cat=劇集">劇集</a></li>
         <li class="nav-right">
-          <a href="history.html" class="nav-history-link">播放历史</a>
+          <a href="history.html" class="nav-history-link">播放歷史</a>
         </li>
       </ul>
     </div>
@@ -48,7 +48,7 @@
       <video id="mainVideoPlayer" controls playsinline></video>
       <div id="playerLoading" class="player-loading-overlay">
         <div class="spinner"></div>
-        <div id="loadingText">视频加载中，请稍候...</div>
+        <div id="loadingText">視頻加載中，請稍候...</div>
       </div>
     </div>
 
@@ -57,20 +57,20 @@
       
       <!-- Left Column: Title, Route Selection, Episodes -->
       <div class="play-left">
-        <h1 id="videoTitle" class="video-heading">加载中...</h1>
+        <h1 id="videoTitle" class="video-heading">加載中...</h1>
         
         <div class="line-info-bar">
-          <span class="line-info-title">线路选择</span>
+          <span class="line-info-title">線路選擇</span>
           <span id="lineCountStat" class="line-info-count"></span>
         </div>
         
         <p class="line-disclaimer">
-          (线路利用网络爬虫技术获取，各线路的版本、清晰度、播放速度等存在差异请自行切换。建议避开晚上高峰时段。)
+          (線路利用網路爬蟲技術獲取，各線路的版本、清晰度、播放速度等存在差異請自行切換。建議避開晚上高峯時段。)
         </p>
 
         <!-- Current Playing Status Badge -->
         <div id="currentPlayStatus" style="margin-bottom: 14px; font-size: 13px; color: #555; background: #f0f7ff; padding: 6px 12px; border-radius: 4px; display: inline-block;">
-          当前正在播放：<strong id="playingEpLabel" style="color: var(--primary-color);">-</strong>
+          當前正在播放：<strong id="playingEpLabel" style="color: var(--primary-color);">-</strong>
         </div>
 
         <!-- Sources and Episode Buttons Container -->
@@ -83,12 +83,13 @@
       <div class="play-right">
         <div class="media-info-card">
           <div class="media-info-inner">
-            <img id="detailPoster" class="media-info-poster" src="" alt="海报" referrerpolicy="no-referrer" onerror="this.src=APP_CONFIG.DEFAULT_FALLBACK_POSTER">
+            <img id="detailPoster" class="media-info-poster" src="" alt="海報" referrerpolicy="no-referrer" onerror="this.src=APP_CONFIG.DEFAULT_FALLBACK_POSTER">
             <div class="media-info-text">
               <h2 id="detailTitle" class="media-info-title">-</h2>
               <div id="detailAlias" class="media-info-alias">-</div>
+              <div class="media-meta-row"><strong>類型：</strong><span id="detailCategory">-</span></div>
               <div class="media-meta-row"><strong>年份：</strong><span id="detailYear">-</span></div>
-              <div class="media-meta-row"><strong>地区：</strong><span id="detailRegion">-</span></div>
+              <div class="media-meta-row"><strong>地區：</strong><span id="detailRegion">-</span></div>
               <div class="media-meta-row"><strong>主演：</strong><span id="detailActors">-</span></div>
             </div>
           </div>
@@ -97,8 +98,8 @@
         <div class="sidebar-box" style="margin-top: 16px;">
           <h4 style="font-size: 14px; margin-bottom: 8px;">快捷操作</h4>
           <div style="display: flex; gap: 8px; flex-direction: column;">
-            <button onclick="copyShareLink()" class="btn-secondary" style="width: 100%; text-align: center;">🔗 复制本片播放链接</button>
-            <a href="index.html" class="btn-outline" style="width: 100%; text-align: center;">🏠 返回视频首页</a>
+            <button onclick="copyShareLink()" class="btn-secondary" style="width: 100%; text-align: center;">🔗 複製本片播放連結</button>
+            <a href="index.html" class="btn-outline" style="width: 100%; text-align: center;">🏠 返回視頻首頁</a>
           </div>
         </div>
       </div>
@@ -121,7 +122,7 @@
 
       const videoId = getUrlParam('id');
       if (!videoId) {
-        alert('未指定影片ID，将返回首页');
+        alert('未指定影片ID，將返回首頁');
         window.location.href = 'index.html';
         return;
       }
@@ -135,18 +136,18 @@
           // Provide demo video
           currentVideo = {
             id: "898899",
-            title: "爱你",
+            title: "愛你",
             poster: "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p2918554091.jpg",
-            category: "剧集",
+            category: "劇集",
             details: {
-              alias: "爱你，是我做过最好的事,爱上你是我做过最好的事",
+              alias: "愛你，是我做過最好的事,愛上你是我做過最好的事",
               year: "2025",
-              region: "中国大陆",
-              actors: "车亮逸/张凌赫,徐若晗,王宥钧,唐九洲,黄灿灿"
+              region: "中國大陸",
+              actors: "車亮逸/張凌赫,徐若晗,王宥鈞,唐九洲,黃燦燦"
             },
             sources: [
               {
-                name: "线路1 (稳定秒播)",
+                name: "線路1 (穩定秒播)",
                 episodes: [
                   { name: "第1集", url: "https://play.xluuss.com/play/7e52BRqa/index.m3u8" },
                   { name: "第2集", url: "https://play.xluuss.com/play/negwR2Ze/index.m3u8" },
@@ -159,7 +160,7 @@
                 ]
               },
               {
-                name: "线路2 (备用极速)",
+                name: "線路2 (備用極速)",
                 episodes: [
                   { name: "第1集", url: "https://v.gsuus.com/play/Rb41Azgd/index.m3u8" },
                   { name: "第2集", url: "https://v.gsuus.com/play/dJ6ZvXDd/index.m3u8" },
@@ -170,7 +171,7 @@
             ]
           };
         } else {
-          alert('找不到该影片信息！');
+          alert('找不到該影片信息！');
           window.location.href = 'index.html';
           return;
         }
@@ -199,11 +200,11 @@
     });
 
     function initPageInfo() {
-      document.title = `${currentVideo.title} - 在线观看`;
+      document.title = `${currentVideo.title} - 在線觀看`;
       document.getElementById('videoTitle').textContent = currentVideo.title;
       
       const count = currentVideo.sources ? currentVideo.sources.length : 0;
-      document.getElementById('lineCountStat').textContent = `（共${count}条）`;
+      document.getElementById('lineCountStat').textContent = `（共${count}條）`;
 
       // Details
       document.getElementById('detailTitle').textContent = currentVideo.title;
@@ -221,7 +222,7 @@
       container.innerHTML = '';
 
       if (!currentVideo.sources || currentVideo.sources.length === 0) {
-        container.innerHTML = '<div style="color: #999; padding: 20px;">暂无可播放的线路，请在管理后台重新配置</div>';
+        container.innerHTML = '<div style="color: #999; padding: 20px;">暫無可播放的線路，請在管理後臺重新配置</div>';
         return;
       }
 
@@ -234,7 +235,7 @@
         header.className = 'source-header';
         header.innerHTML = `
           <div class="source-title">
-            <span>${source.name || ('线路' + (sIdx + 1))}</span>
+            <span>${source.name || ('線路' + (sIdx + 1))}</span>
             <span class="source-tag">${source.episodes ? source.episodes.length : 0} 集</span>
           </div>
         `;
@@ -254,7 +255,7 @@
             epGrid.appendChild(btn);
           });
         } else {
-          epGrid.innerHTML = '<span style="color: #999; font-size: 12px;">该线路暂无集数</span>';
+          epGrid.innerHTML = '<span style="color: #999; font-size: 12px;">該線路暫無集數</span>';
         }
 
         sec.appendChild(epGrid);
@@ -279,18 +280,18 @@
         activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
-      const epLabel = `${source.name || ('线路' + (sIdx + 1))} - ${ep.name}`;
+      const epLabel = `${source.name || ('線路' + (sIdx + 1))} - ${ep.name}`;
       document.getElementById('playingEpLabel').textContent = epLabel;
 
       loadingOverlay.style.display = 'flex';
-      loadingText.textContent = `正在连接 ${epLabel}...`;
+      loadingText.textContent = `正在連接 ${epLabel}...`;
 
       loadStreamUrl(ep.url, resumeTime);
     }
 
     function loadStreamUrl(streamUrl, resumeTime = 0) {
       if (!streamUrl) {
-        showPlayerError('视频链接为空，请切换其他集数或线路');
+        showPlayerError('視頻連結爲空，請切換其他集數或線路');
         return;
       }
 
@@ -332,7 +333,7 @@
                 break;
               default:
                 hls.destroy();
-                showPlayerError('当前线路无法播放该视频源，请点击下方其他线路切换！');
+                showPlayerError('當前線路無法播放該視頻源，請點擊下方其他線路切換！');
                 break;
             }
           }
@@ -365,14 +366,14 @@
         <div style="color: #ff6b6b; font-weight: bold; margin-bottom: 8px;">⚠️ 播放提示</div>
         <div>${msg}</div>
         <div style="margin-top: 12px;">
-          <button onclick="tryNextLine()" class="btn-primary" style="padding: 5px 12px; font-size: 12px;">自动切换下一条线路</button>
+          <button onclick="tryNextLine()" class="btn-primary" style="padding: 5px 12px; font-size: 12px;">自動切換下一條線路</button>
         </div>
       `;
     }
 
     function tryNextLine() {
       if (!currentVideo.sources || currentVideo.sources.length <= 1) {
-        alert('暂无其他备用线路');
+        alert('暫無其他備用線路');
         return;
       }
       const nextSrc = (currentSourceIdx + 1) % currentVideo.sources.length;
@@ -413,7 +414,7 @@
 
       videoEl.addEventListener('waiting', () => {
         loadingOverlay.style.display = 'flex';
-        loadingText.textContent = '缓冲中...';
+        loadingText.textContent = '緩衝中...';
       });
     }
 
@@ -421,10 +422,10 @@
       const url = window.location.href;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(() => {
-          alert('本片播放链接已复制到剪贴板！');
+          alert('本片播放連結已複製到剪貼板！');
         });
       } else {
-        prompt('请复制以下链接：', url);
+        prompt('請複製以下連結：', url);
       }
     }
   </script>

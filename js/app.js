@@ -6,7 +6,7 @@
 const APP_CONFIG = {
   DATA_URL: './data/videos.json',
   HISTORY_KEY: 'ikan_watch_history_v1',
-  DEFAULT_FALLBACK_POSTER: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 450' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' fill='%23eceff1'/%3E%3Ctext x='50%25' y='50%25' fill='%2390a4ae' font-family='sans-serif' font-size='20' text-anchor='middle' dy='.3em'%3E暂无封面%3C/text%3E%3C/svg%3E"
+  DEFAULT_FALLBACK_POSTER: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 450' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' fill='%23eceff1'/%3E%3Ctext x='50%25' y='50%25' fill='%2390a4ae' font-family='sans-serif' font-size='20' text-anchor='middle' dy='.3em'%3E暫無封面%3C/text%3E%3C/svg%3E"
 };
 
 // Robot Logo SVG markup matching the icon in iKanbot header
@@ -73,9 +73,9 @@ const WatchHistory = {
       id: String(video.id),
       title: video.title,
       poster: video.poster,
-      category: video.category || '剧集',
+      category: video.category || '劇集',
       sourceIndex: sourceIndex || 0,
-      sourceName: video.sources && video.sources[sourceIndex] ? video.sources[sourceIndex].name : '线路1',
+      sourceName: video.sources && video.sources[sourceIndex] ? video.sources[sourceIndex].name : '線路1',
       epIndex: epIndex || 0,
       epName: epName || '第1集',
       currentTime: Math.floor(currentTime),

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
-  <title>播放历史 - 视频流媒体</title>
+  <title>播放歷史 - 視頻流媒體</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,10 +13,10 @@
   <header class="site-header">
     <div class="container">
       <div class="header-top">
-        <a href="index.html" class="brand-logo" title="返回首页"></a>
+        <a href="index.html" class="brand-logo" title="返回首頁"></a>
         <div class="search-box-wrap">
           <form id="searchForm" class="search-form">
-            <input type="text" id="searchInput" class="search-input" placeholder="请输入影片、短剧、演职人员" autocomplete="off">
+            <input type="text" id="searchInput" class="search-input" placeholder="請輸入影片、短劇、演職人員" autocomplete="off">
             <button type="submit" class="search-btn">搜索</button>
           </form>
         </div>
@@ -28,11 +28,11 @@
   <nav class="sub-nav">
     <div class="container">
       <ul class="nav-links">
-        <li><a href="index.html">首页</a></li>
-        <li><a href="index.html?cat=电影">电影</a></li>
-        <li><a href="index.html?cat=剧集">剧集</a></li>
+        <li><a href="index.html">首頁</a></li>
+        <li><a href="index.html?cat=電影">電影</a></li>
+        <li><a href="index.html?cat=劇集">劇集</a></li>
         <li class="nav-right">
-          <a href="history.html" class="nav-history-link" style="color: var(--primary-color); font-weight: bold;">播放历史</a>
+          <a href="history.html" class="nav-history-link" style="color: var(--primary-color); font-weight: bold;">播放歷史</a>
         </li>
       </ul>
     </div>
@@ -42,10 +42,10 @@
   <main class="container">
     <div class="admin-card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h2 class="admin-card-title" style="margin-bottom: 0;">🕒 您的播放历史记录</h2>
-        <button onclick="clearAllHistory()" class="btn-danger">清空所有记录</button>
+        <h2 class="admin-card-title" style="margin-bottom: 0;">🕒 您的播放歷史記錄</h2>
+        <button onclick="clearAllHistory()" class="btn-danger">清空所有記錄</button>
       </div>
-      <p class="admin-card-subtitle">播放进度保存在您的本地浏览器中，随时可一键继续播放。</p>
+      <p class="admin-card-subtitle">播放進度保存在您的本地瀏覽器中，隨時可一鍵繼續播放。</p>
 
       <div id="historyListContainer">
         <!-- Rendered history table -->
@@ -67,9 +67,9 @@
       if (!list || list.length === 0) {
         container.innerHTML = `
           <div class="empty-state" style="padding: 40px 20px;">
-            <h3>暂无播放历史记录</h3>
-            <p>您观看过的影片和进度会自动记录在此处，方便您随时继续收看。</p>
-            <a href="index.html" class="btn-primary">去首页逛逛</a>
+            <h3>暫無播放歷史記錄</h3>
+            <p>您觀看過的影片和進度會自動記錄在此處，方便您隨時繼續收看。</p>
+            <a href="index.html" class="btn-primary">去首頁逛逛</a>
           </div>
         `;
         return;
@@ -79,11 +79,11 @@
         <table class="history-table">
           <thead>
             <tr>
-              <th style="width: 80px;">海报</th>
-              <th>影片名称</th>
-              <th>上次观看集数</th>
-              <th>播放进度</th>
-              <th>观看时间</th>
+              <th style="width: 80px;">海報</th>
+              <th>影片名稱</th>
+              <th>上次觀看集數</th>
+              <th>播放進度</th>
+              <th>觀看時間</th>
               <th style="width: 140px;">操作</th>
             </tr>
           </thead>
@@ -102,14 +102,14 @@
             </td>
             <td>
               <strong>${item.title}</strong>
-              <div style="font-size: 12px; color: #888;">${item.category || '剧集'} · ${item.sourceName || '线路'}</div>
+              <div style="font-size: 12px; color: #888;">${item.category || '劇集'} · ${item.sourceName || '線路'}</div>
             </td>
             <td><span style="background: #eef5fe; color: #2b85e4; padding: 2px 8px; border-radius: 4px; font-size: 13px;">${item.epName || '第1集'}</span></td>
             <td>${timeStr}</td>
             <td style="font-size: 13px; color: #777;">${dateStr}</td>
             <td>
-              <a href="play.html?id=${encodeURIComponent(item.id)}&src=${item.sourceIndex}&ep=${item.epIndex}" class="btn-primary" style="padding: 4px 10px; font-size: 12px; margin-right: 6px;">继续播放</a>
-              <button onclick="removeHistory('${item.id}')" class="btn-secondary" style="padding: 4px 8px; font-size: 12px;">删除</button>
+              <a href="play.html?id=${encodeURIComponent(item.id)}&src=${item.sourceIndex}&ep=${item.epIndex}" class="btn-primary" style="padding: 4px 10px; font-size: 12px; margin-right: 6px;">繼續播放</a>
+              <button onclick="removeHistory('${item.id}')" class="btn-secondary" style="padding: 4px 8px; font-size: 12px;">刪除</button>
             </td>
           </tr>
         `;
@@ -125,7 +125,7 @@
     }
 
     function clearAllHistory() {
-      if (confirm('确定要清空所有的观看历史记录吗？')) {
+      if (confirm('確定要清空所有的觀看歷史記錄嗎？')) {
         WatchHistory.clear();
         renderHistory();
       }
