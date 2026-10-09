@@ -49,10 +49,19 @@
 
     <!-- Video Player Container (16:9) -->
     <div class="player-wrapper">
-      <video id="mainVideoPlayer" controls playsinline></video>
-      <div id="playerLoading" class="player-loading-overlay">
+      <video id="mainVideoPlayer" controls playsinline preload="metadata"></video>
+      <div id="playerLoading" class="player-loading-overlay" style="display: none;">
         <div class="spinner"></div>
         <div id="loadingText">視頻加載中，請稍候...</div>
+      </div>
+      <!-- Center Play Button Overlay -->
+      <div id="centerPlayOverlay" class="center-play-overlay" onclick="startPlaybackFromCenterBtn()" title="點擊播放">
+        <div class="center-play-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+        <div class="center-play-text">點擊播放</div>
       </div>
     </div>
 
@@ -74,7 +83,7 @@
 
         <!-- Current Playing Status Badge -->
         <div id="currentPlayStatus" style="margin-bottom: 14px; font-size: 13px; color: #555; background: #f0f7ff; padding: 6px 12px; border-radius: 4px; display: inline-block;">
-          當前正在播放：<strong id="playingEpLabel" style="color: var(--primary-color);">-</strong>
+          <span id="playStatusPrefix">當前已選分集：</span><strong id="playingEpLabel" style="color: var(--primary-color);">-</strong>
         </div>
 
         <!-- Sources and Episode Buttons Container -->
@@ -205,7 +214,8 @@
         resumeTime = historyItem.currentTime || 0;
       }
 
-      playEpisode(targetSrc, targetEp, resumeTime);
+      // Initial page entry: load episode and prepare player, but DO NOT autoplay video!
+      playEpisode(targetSrc, targetEp, resumeTime, false);
       setupPlayerEvents();
     });
 
@@ -215,6 +225,11 @@
       
       const count = currentVideo.sources ? currentVideo.sources.length : 0;
       document.getElementById('lineCountStat').textContent = `（共${count}條）`;
+
+      // Set poster on video player
+      if (currentVideo.poster) {
+        videoEl.poster = currentVideo.poster;
+      }
 
       // Details
       document.getElementById('detailTitle').textContent = currentVideo.title;
@@ -261,7 +276,7 @@
             btn.id = `ep-btn-${sIdx}-${eIdx}`;
             btn.textContent = ep.name || `第${eIdx + 1}集`;
             btn.title = ep.name;
-            btn.onclick = () => playEpisode(sIdx, eIdx, 0);
+            btn.onclick = () => playEpisode(sIdx, eIdx, 0, true);
             epGrid.appendChild(btn);
           });
         } else {
@@ -273,7 +288,7 @@
       });
     }
 
-    function playEpisode(sIdx, eIdx, resumeTime = 0) {
+    function playEpisode(sIdx, eIdx, resumeTime = 0, autoPlay = true) {
       if (!currentVideo.sources || !currentVideo.sources[sIdx]) return;
       const source = currentVideo.sources[sIdx];
       if (!source.episodes || !source.episodes[eIdx]) return;
@@ -293,13 +308,34 @@
       const epLabel = `${source.name || ('線路' + (sIdx + 1))} - ${ep.name}`;
       document.getElementById('playingEpLabel').textContent = epLabel;
 
-      loadingOverlay.style.display = 'flex';
-      loadingText.textContent = `正在連接 ${epLabel}...`;
+      const centerOverlay = document.getElementById('centerPlayOverlay');
+      const prefixEl = document.getElementById('playStatusPrefix');
 
-      loadStreamUrl(ep.url, resumeTime);
+      if (autoPlay) {
+        if (centerOverlay) centerOverlay.style.display = 'none';
+        loadingOverlay.style.display = 'flex';
+        loadingText.textContent = `正在連接 ${epLabel}...`;
+        if (prefixEl) prefixEl.textContent = '當前正在播放：';
+      } else {
+        loadingOverlay.style.display = 'none';
+        if (centerOverlay) centerOverlay.style.display = 'flex';
+        if (prefixEl) prefixEl.textContent = '當前已選分集：';
+      }
+
+      loadStreamUrl(ep.url, resumeTime, autoPlay);
     }
 
-    function loadStreamUrl(streamUrl, resumeTime = 0) {
+    function startPlaybackFromCenterBtn() {
+      const centerOverlay = document.getElementById('centerPlayOverlay');
+      if (centerOverlay) centerOverlay.style.display = 'none';
+      const prefixEl = document.getElementById('playStatusPrefix');
+      if (prefixEl) prefixEl.textContent = '當前正在播放：';
+      videoEl.play().catch((err) => {
+        console.warn('Play error:', err);
+      });
+    }
+
+    function loadStreamUrl(streamUrl, resumeTime = 0, autoPlay = true) {
       if (!streamUrl) {
         showPlayerError('視頻連結爲空，請切換其他集數或線路');
         return;
@@ -327,7 +363,9 @@
           if (resumeTime > 5) {
             videoEl.currentTime = resumeTime;
           }
-          videoEl.play().catch(() => {});
+          if (autoPlay) {
+            videoEl.play().catch(() => {});
+          }
         });
 
         hls.on(Hls.Events.ERROR, (event, data) => {
@@ -356,7 +394,9 @@
           if (resumeTime > 5) {
             videoEl.currentTime = resumeTime;
           }
-          videoEl.play().catch(() => {});
+          if (autoPlay) {
+            videoEl.play().catch(() => {});
+          }
         }, { once: true });
       } else {
         // MP4 / regular video
@@ -366,7 +406,9 @@
         if (resumeTime > 5) {
           videoEl.currentTime = resumeTime;
         }
-        videoEl.play().catch(() => {});
+        if (autoPlay) {
+          videoEl.play().catch(() => {});
+        }
       }
     }
 
@@ -387,7 +429,7 @@
         return;
       }
       const nextSrc = (currentSourceIdx + 1) % currentVideo.sources.length;
-      playEpisode(nextSrc, currentEpIdx, 0);
+      playEpisode(nextSrc, currentEpIdx, 0, true);
     }
 
     function setupPlayerEvents() {
@@ -414,7 +456,22 @@
       videoEl.addEventListener('ended', () => {
         const src = currentVideo.sources[currentSourceIdx];
         if (src && src.episodes && currentEpIdx + 1 < src.episodes.length) {
-          playEpisode(currentSourceIdx, currentEpIdx + 1, 0);
+          playEpisode(currentSourceIdx, currentEpIdx + 1, 0, true);
+        }
+      });
+
+      videoEl.addEventListener('play', () => {
+        const centerOverlay = document.getElementById('centerPlayOverlay');
+        if (centerOverlay) centerOverlay.style.display = 'none';
+        loadingOverlay.style.display = 'none';
+        const prefixEl = document.getElementById('playStatusPrefix');
+        if (prefixEl) prefixEl.textContent = '當前正在播放：';
+      });
+
+      videoEl.addEventListener('pause', () => {
+        if (videoEl.currentTime < videoEl.duration && loadingOverlay.style.display !== 'flex') {
+          const centerOverlay = document.getElementById('centerPlayOverlay');
+          if (centerOverlay) centerOverlay.style.display = 'flex';
         }
       });
 
