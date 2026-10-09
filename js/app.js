@@ -125,11 +125,13 @@ function formatTime(seconds) {
   return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
+const BRAND_LOGO_HTML = `<img src="img/logo.png" alt="Logo" class="site-logo-img">`;
+
 // Shared Header Initializer for all pages
 function initCommonHeader(activeNav = 'home') {
   const brandEl = document.querySelector('.brand-logo');
-  if (brandEl && !brandEl.innerHTML.trim()) {
-    brandEl.innerHTML = ROBOT_LOGO_SVG;
+  if (brandEl) {
+    brandEl.innerHTML = BRAND_LOGO_HTML;
     brandEl.onclick = () => window.location.href = 'index.html';
   }
 
@@ -149,4 +151,59 @@ function initCommonHeader(activeNav = 'home') {
       }
     });
   }
+
+  // Enable Android TV Remote D-Pad Navigation
+  initTvRemoteNavigation();
+}
+
+// Android TV / TV Box Remote Control D-pad support
+function initTvRemoteNavigation() {
+  window.addEventListener('keydown', (e) => {
+    // Arrow keys, Enter, Back
+    const tvKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Escape'];
+    if (!tvKeys.includes(e.key)) return;
+
+    // If typing in search input, let default behavior work unless Down is pressed
+    if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+      if (e.key === 'ArrowDown') {
+        document.activeElement.blur();
+      } else {
+        return;
+      }
+    }
+
+    const focusables = Array.from(document.querySelectorAll(
+      'a, button, input, .video-card, .tag-pill, .ep-btn, .line-btn'
+    )).filter(el => el.offsetParent !== null && !el.disabled);
+
+    if (focusables.length === 0) return;
+
+    const currentIdx = focusables.indexOf(document.activeElement);
+
+    if (e.key === 'ArrowRight') {
+      const next = currentIdx >= 0 && currentIdx < focusables.length - 1 ? focusables[currentIdx + 1] : focusables[0];
+      next.focus();
+      e.preventDefault();
+    } else if (e.key === 'ArrowLeft') {
+      const prev = currentIdx > 0 ? focusables[currentIdx - 1] : focusables[focusables.length - 1];
+      prev.focus();
+      e.preventDefault();
+    } else if (e.key === 'ArrowDown') {
+      // jump forward by ~4 items or next row
+      const step = window.innerWidth > 900 ? 5 : 3;
+      const target = currentIdx + step < focusables.length ? focusables[currentIdx + step] : focusables[focusables.length - 1];
+      target.focus();
+      e.preventDefault();
+    } else if (e.key === 'ArrowUp') {
+      const step = window.innerWidth > 900 ? 5 : 3;
+      const target = currentIdx - step >= 0 ? focusables[currentIdx - step] : focusables[0];
+      target.focus();
+      e.preventDefault();
+    } else if (e.key === 'Escape') {
+      // Go back to home if not on home
+      if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/' && !window.location.pathname.endsWith('/')) {
+        window.location.href = 'index.html';
+      }
+    }
+  });
 }

@@ -76,12 +76,27 @@ a:hover {
   cursor: pointer;
 }
 
-.brand-logo svg {
-  width: 52px;
-  height: 52px;
-  fill: none;
-  stroke: #444;
-  stroke-width: 2.2;
+.brand-logo img, .site-logo-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.brand-logo:hover img, .brand-logo:hover .site-logo-img {
+  transform: scale(1.06);
+  box-shadow: 0 4px 12px rgba(43, 133, 228, 0.3);
+}
+
+/* TV Box / Remote Focus Highlight */
+:focus-visible, .tv-focused {
+  outline: 3px solid #2b85e4 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 12px rgba(43, 133, 228, 0.6) !important;
+  transform: scale(1.03);
 }
 
 .search-box-wrap {
