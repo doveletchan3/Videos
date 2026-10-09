@@ -217,7 +217,27 @@
       // Initial page entry: load episode and prepare player, but DO NOT autoplay video!
       playEpisode(targetSrc, targetEp, resumeTime, false);
       setupPlayerEvents();
+
+      // Ensure video player is positioned at the top of the screen on page entry
+      scrollVideoToTop(false);
+      setTimeout(() => scrollVideoToTop(false), 60);
+      setTimeout(() => scrollVideoToTop(false), 200);
     });
+
+    function scrollVideoToTop(smooth = true) {
+      const player = document.querySelector('.player-wrapper');
+      if (player) {
+        const rect = player.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        // Provide a comfortable breathing margin (14px) between the player and the top of screen
+        const topMargin = 14;
+        const targetTop = Math.max(0, rect.top + scrollTop - topMargin);
+        window.scrollTo({
+          top: targetTop,
+          behavior: smooth ? 'smooth' : 'auto'
+        });
+      }
+    }
 
     function initPageInfo() {
       document.title = `${currentVideo.title} - 在線觀看`;
@@ -302,7 +322,6 @@
       const activeBtn = document.getElementById(`ep-btn-${sIdx}-${eIdx}`);
       if (activeBtn) {
         activeBtn.classList.add('active');
-        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
       const epLabel = `${source.name || ('線路' + (sIdx + 1))} - ${ep.name}`;
@@ -316,10 +335,13 @@
         loadingOverlay.style.display = 'flex';
         loadingText.textContent = `正在連接 ${epLabel}...`;
         if (prefixEl) prefixEl.textContent = '當前正在播放：';
+        // When changing episode, smoothly scroll video window to top of screen
+        scrollVideoToTop(true);
       } else {
         loadingOverlay.style.display = 'none';
         if (centerOverlay) centerOverlay.style.display = 'flex';
         if (prefixEl) prefixEl.textContent = '當前已選分集：';
+        scrollVideoToTop(false);
       }
 
       loadStreamUrl(ep.url, resumeTime, autoPlay);
@@ -330,6 +352,7 @@
       if (centerOverlay) centerOverlay.style.display = 'none';
       const prefixEl = document.getElementById('playStatusPrefix');
       if (prefixEl) prefixEl.textContent = '當前正在播放：';
+      scrollVideoToTop(true);
       videoEl.play().catch((err) => {
         console.warn('Play error:', err);
       });
