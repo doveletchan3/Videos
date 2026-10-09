@@ -1,17 +1,29 @@
 {
+  "id": "/Videos/",
   "name": "Videos - 影片串流媒體",
   "short_name": "Videos",
   "description": "流暢高清影片與劇集串流播放平台，支援手機、平板、電腦與電視盒子",
+  "lang": "zh-Hant",
+  "dir": "ltr",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#ffffff",
   "theme_color": "#2b85e4",
+  "categories": ["entertainment", "video"],
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "img/logo-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/logo-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "img/logo-192.png",
@@ -26,5 +38,20 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["entertainment", "video"]
+  "screenshots": [
+    {
+      "src": "img/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Videos 電視大螢幕與電腦桌面觀影體驗"
+    },
+    {
+      "src": "img/screenshot-mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Videos 行動裝置直覺播放體驗"
+    }
+  ]
 }

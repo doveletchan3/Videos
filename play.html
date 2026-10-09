@@ -113,6 +113,12 @@
 
   <script src="js/app.js"></script>
   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
     let currentVideo = null;
     let currentSourceIdx = 0;
     let currentEpIdx = 0;

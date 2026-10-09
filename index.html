@@ -105,6 +105,17 @@
 
   <script src="js/app.js"></script>
   <script>
+    // Register Service Worker for PWA Store Readiness
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.log('ServiceWorker registered with scope:', reg.scope);
+        }).catch((err) => {
+          console.warn('ServiceWorker registration error:', err);
+        });
+      });
+    }
+
     let allVideos = [];
     let currentCategory = 'all';
     let currentTag = '全部';
