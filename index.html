@@ -86,26 +86,6 @@
         </div>
       </section>
 
-      <!-- Right Sidebar Tags -->
-      <aside class="sidebar-content">
-        <div class="sidebar-box">
-          <h3 class="sidebar-title">最近熱門分類</h3>
-          <div class="tag-cloud" id="tagCloud">
-            <span class="tag-pill active" onclick="filterTag('全部', this)">全部</span>
-            <span class="tag-pill" onclick="filterTag('熱門', this)">熱門</span>
-            <span class="tag-pill" onclick="filterTag('國產劇', this)">國產劇</span>
-            <span class="tag-pill" onclick="filterTag('美劇', this)">美劇</span>
-            <span class="tag-pill" onclick="filterTag('英劇', this)">英劇</span>
-            <span class="tag-pill" onclick="filterTag('韓劇', this)">韓劇</span>
-            <span class="tag-pill" onclick="filterTag('日劇', this)">日劇</span>
-            <span class="tag-pill" onclick="filterTag('港劇', this)">港劇</span>
-            <span class="tag-pill" onclick="filterTag('日本動畫', this)">日本動畫</span>
-            <span class="tag-pill" onclick="filterTag('綜藝', this)">綜藝</span>
-            <span class="tag-pill" onclick="filterTag('紀錄片', this)">紀錄片</span>
-          </div>
-        </div>
-      </aside>
-
     </div>
   </main>
 
@@ -306,19 +286,14 @@
 
     function renderCategorySubFilterUI() {
       const subcatBar = document.getElementById('subcategoryFilterBar');
-      const tagCloud = document.getElementById('tagCloud');
-      const sidebarTitle = document.querySelector('.sidebar-title');
 
       let tagList = [];
       if (currentCategory === '劇集') {
         tagList = SUBCATEGORIES['劇集'];
-        if (sidebarTitle) sidebarTitle.textContent = '劇集分類';
       } else if (currentCategory === '電影') {
         tagList = SUBCATEGORIES['電影'];
-        if (sidebarTitle) sidebarTitle.textContent = '電影分類';
       } else {
         tagList = ["全部", "熱門", "電影", "劇集", "國產劇", "美劇", "韓劇", "日劇", "日本動畫", "綜藝", "紀錄片"];
-        if (sidebarTitle) sidebarTitle.textContent = '熱門分類';
       }
 
       // Render top subcat strip
@@ -332,19 +307,6 @@
           btn.style.cursor = 'pointer';
           btn.onclick = () => filterTag(t);
           subcatBar.appendChild(btn);
-        });
-      }
-
-      // Render sidebar tag cloud
-      if (tagCloud) {
-        tagCloud.innerHTML = '';
-        tagList.forEach(t => {
-          const pill = document.createElement('span');
-          pill.className = 'tag-pill' + (t === currentTag ? ' active' : '');
-          pill.textContent = t;
-          pill.style.cursor = 'pointer';
-          pill.onclick = () => filterTag(t);
-          tagCloud.appendChild(pill);
         });
       }
     }

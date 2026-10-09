@@ -2270,30 +2270,10 @@
     },
     "sources": [
       {
-        "source_index": 7,
-        "source_id": "21415144",
-        "name": "線路7",
-        "episode_count": 3,
-        "episodes": [
-          {
-            "name": "第01集",
-            "url": "https://v13.qqqrst.com/yyv13/202610/07/JER26iEdEu27/video/index.m3u8"
-          },
-          {
-            "name": "第02集",
-            "url": "https://v13.qqqrst.com/yyv13/202610/07/WWvnpP45m627/video/index.m3u8"
-          },
-          {
-            "name": "第03集",
-            "url": "https://v14.qqqrst.com/yyv14/202610/08/172gYrHJKd27/video/index.m3u8"
-          }
-        ]
-      },
-      {
         "source_index": 9,
         "source_id": "21415328",
         "name": "線路9",
-        "episode_count": 3,
+        "episode_count": 4,
         "episodes": [
           {
             "name": "第01集",
@@ -2306,6 +2286,10 @@
           {
             "name": "第03集",
             "url": "https://b3.bdzybf22.com/videos/202610/08/6ac73eb8cba42bd4e19704b7/7320bd/index.m3u8"
+          },
+          {
+            "name": "第04集",
+            "url": "https://b3.bdzybf22.com/videos/202610/09/6ac890c0cba42bd4e1989f32/2egc37/index.m3u8"
           }
         ]
       },
@@ -2313,7 +2297,7 @@
         "source_index": 10,
         "source_id": "21414969",
         "name": "線路10",
-        "episode_count": 3,
+        "episode_count": 4,
         "episodes": [
           {
             "name": "第01集",
@@ -2326,11 +2310,43 @@
           {
             "name": "第03集",
             "url": "https://v14.rstu6.com/202610/08/172gYrHJKd27/video/index.m3u8"
+          },
+          {
+            "name": "第04集",
+            "url": "https://v15.rstu6.com/202610/09/rvGVsFMaLx27/video/index.m3u8"
+          }
+        ]
+      },
+      {
+        "source_index": 19,
+        "source_id": "21415075",
+        "name": "線路19",
+        "episode_count": 5,
+        "episodes": [
+          {
+            "name": "第01集",
+            "url": "https://vod1.maowushi.com/20261007/zxWYNGBC/index.m3u8"
+          },
+          {
+            "name": "第02集",
+            "url": "https://vod1.maowushi.com/20261007/W6aRHuts/index.m3u8"
+          },
+          {
+            "name": "第03集",
+            "url": "https://vod1.maowushi.com/20261007/WNTU1O8s/index.m3u8"
+          },
+          {
+            "name": "第04集",
+            "url": "https://vod1.maowushi.com/20261008/H0K2Y0Rj/index.m3u8"
+          },
+          {
+            "name": "第05集",
+            "url": "https://vod1.maowushi.com/20261009/b9377zkd/index.m3u8"
           }
         ]
       }
     ],
-    "updatedAt": "2026-10-08T21:10:42.052911"
+    "updatedAt": "2026-10-09T13:48:13.060222"
   },
   {
     "id": "384246",

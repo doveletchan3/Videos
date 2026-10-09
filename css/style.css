@@ -259,6 +259,12 @@ a:hover {
   }
 }
 
+@media (min-width: 1200px) {
+  .video-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}
+
 .video-card {
   display: flex;
   flex-direction: column;
