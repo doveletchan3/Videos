@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>视频流媒体 - 在线点播与观看</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Header with Logo and Search -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-top">
+        <a href="index.html" class="brand-logo" title="返回首页"></a>
+        <div class="search-box-wrap">
+          <form id="searchForm" class="search-form">
+            <input type="text" id="searchInput" class="search-input" placeholder="请输入影片、短剧、演职人员" autocomplete="off">
+            <button type="submit" class="search-btn">搜索</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sub Navigation Bar -->
+  <nav class="sub-nav">
+    <div class="container">
+      <ul class="nav-links">
+        <li class="active"><a href="javascript:void(0)" onclick="filterCategory('all', this)">首页</a></li>
+        <li><a href="javascript:void(0)" onclick="filterCategory('电影', this)">电影</a></li>
+        <li><a href="javascript:void(0)" onclick="filterCategory('剧集', this)">剧集</a></li>
+        <li><a href="javascript:void(0)" onclick="filterCategory('榜单', this)">榜单</a></li>
+        <li class="nav-right">
+          <a href="history.html" class="nav-history-link">播放历史</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Body Content -->
+  <main class="container">
+    <div class="home-layout">
+      
+      <!-- Video Grid Section -->
+      <section class="main-content">
+        <div class="section-header">
+          <h2 id="currentCategoryTitle" class="section-title">全部影片</h2>
+          <span id="videoCountBadge" style="font-size: 13px; color: #888;">共 0 部</span>
+        </div>
+
+        <!-- Video Cards Container -->
+        <div id="videoGrid" class="video-grid">
+          <!-- Dynamically populated or empty state -->
+        </div>
+
+        <!-- Day 1 Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+          </svg>
+          <h3>暂无影片</h3>
+          <p>当前影片库暂无影片，最新影视资源正在更新中，敬请期待！</p>
+        </div>
+      </section>
+
+      <!-- Right Sidebar Tags -->
+      <aside class="sidebar-content">
+        <div class="sidebar-box">
+          <h3 class="sidebar-title">最近热门分类</h3>
+          <div class="tag-cloud" id="tagCloud">
+            <span class="tag-pill active" onclick="filterTag('全部', this)">全部</span>
+            <span class="tag-pill" onclick="filterTag('热门', this)">热门</span>
+            <span class="tag-pill" onclick="filterTag('国产剧', this)">国产剧</span>
+            <span class="tag-pill" onclick="filterTag('美剧', this)">美剧</span>
+            <span class="tag-pill" onclick="filterTag('英剧', this)">英剧</span>
+            <span class="tag-pill" onclick="filterTag('韩剧', this)">韩剧</span>
+            <span class="tag-pill" onclick="filterTag('日剧', this)">日剧</span>
+            <span class="tag-pill" onclick="filterTag('港剧', this)">港剧</span>
+            <span class="tag-pill" onclick="filterTag('日本动画', this)">日本动画</span>
+            <span class="tag-pill" onclick="filterTag('综艺', this)">综艺</span>
+            <span class="tag-pill" onclick="filterTag('纪录片', this)">纪录片</span>
+          </div>
+        </div>
+
+        <div class="sidebar-box" style="background: #fafbfc;">
+          <h3 class="sidebar-title">💡 观影温馨提示</h3>
+          <p style="font-size: 13px; color: #666; line-height: 1.6;">
+            强烈建议使用谷歌 Chrome 浏览器或 Edge 浏览器观看，以获得更流畅的超清播放体验。
+          </p>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    let allVideos = [];
+    let currentCategory = 'all';
+    let currentTag = '全部';
+    let searchQuery = '';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initCommonHeader('home');
+      
+      // Check query param
+      const urlQ = getUrlParam('q');
+      if (urlQ) {
+        document.getElementById('searchInput').value = urlQ;
+        searchQuery = urlQ;
+      }
+
+      await refreshVideoList();
+
+      // Demo button event
+      const loadDemoBtn = document.getElementById('loadDemoBtn');
+      if (loadDemoBtn) {
+        loadDemoBtn.addEventListener('click', loadDemoVideo);
+      }
+    });
+
+    async function refreshVideoList() {
+      allVideos = await loadVideos();
+      renderFilteredVideos();
+    }
+
+    function renderFilteredVideos() {
+      const grid = document.getElementById('videoGrid');
+      const emptyState = document.getElementById('emptyState');
+      const badge = document.getElementById('videoCountBadge');
+
+      let filtered = allVideos.slice();
+
+      // Category filter
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(v => (v.category || '').includes(currentCategory));
+      }
+
+      // Tag filter
+      if (currentTag !== '全部') {
+        filtered = filtered.filter(v => {
+          const tags = Array.isArray(v.tags) ? v.tags.join(' ') : '';
+          const detailsStr = v.details ? Object.values(v.details).join(' ') : '';
+          const fullMeta = `${tags} ${detailsStr} ${v.title}`;
+          return fullMeta.includes(currentTag);
+        });
+      }
+
+      // Search filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        filtered = filtered.filter(v => {
+          const title = (v.title || '').toLowerCase();
+          const actors = (v.details && v.details.actors ? v.details.actors : '').toLowerCase();
+          const alias = (v.details && v.details.alias ? v.details.alias : '').toLowerCase();
+          return title.includes(q) || actors.includes(q) || alias.includes(q);
+        });
+      }
+
+      badge.textContent = `共 ${filtered.length} 部`;
+
+      if (filtered.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'block';
+        if (allVideos.length > 0) {
+          emptyState.querySelector('h3').textContent = '未找到匹配的影片';
+          emptyState.querySelector('p').textContent = '换个关键词或分类标签试试吧！';
+        } else {
+          emptyState.querySelector('h3').textContent = '影片库暂无影片（Day 1）';
+          emptyState.querySelector('p').textContent = '请进入【管理后台】输入爱看机器人链接添加影片，或者点击体验演示影片。';
+        }
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      grid.style.display = 'grid';
+      grid.innerHTML = '';
+
+      filtered.forEach(video => {
+        const card = document.createElement('a');
+        card.className = 'video-card';
+        card.href = `play.html?id=${encodeURIComponent(video.id)}`;
+
+        let epBadge = '';
+        if (video.sources && video.sources.length > 0) {
+          const epCount = video.sources[0].episodes ? video.sources[0].episodes.length : 0;
+          epBadge = epCount > 1 ? `更新至${epCount}集` : (epCount === 1 ? '全1集' : '正片');
+        }
+
+        const posterUrl = video.poster || APP_CONFIG.DEFAULT_FALLBACK_POSTER;
+
+        card.innerHTML = `
+          <div class="poster-wrap">
+            <img src="${posterUrl}" alt="${video.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='${APP_CONFIG.DEFAULT_FALLBACK_POSTER}'">
+            ${epBadge ? `<span class="poster-badge">${epBadge}</span>` : ''}
+          </div>
+          <div class="video-card-title" title="${video.title}">${video.title}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterCategory(cat, el) {
+      currentCategory = cat;
+      document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
+      if (el && el.parentElement) el.parentElement.classList.add('active');
+      document.getElementById('currentCategoryTitle').textContent = cat === 'all' ? '全部影片' : cat;
+      renderFilteredVideos();
+    }
+
+    function filterTag(tag, el) {
+      currentTag = tag;
+      document.querySelectorAll('.tag-pill').forEach(pill => pill.classList.remove('active'));
+      if (el) el.classList.add('active');
+      renderFilteredVideos();
+    }
+
+    window.performSearch = function(query) {
+      searchQuery = query;
+      renderFilteredVideos();
+    };
+
+    // Load Demo Video (from ikanbot 898899 爱你)
+    async function loadDemoVideo() {
+      const demoVideo = {
+        id: "898899",
+        title: "爱你",
+        poster: "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p2918554091.jpg",
+        category: "剧集",
+        tags: ["热门", "国产剧"],
+        details: {
+          alias: "爱你，是我做过最好的事,爱上你是我做过最好的事",
+          year: "2025",
+          region: "中国大陆",
+          actors: "车亮逸/张凌赫,徐若晗,王宥钧,唐九洲,黄灿灿"
+        },
+        sources: [
+          {
+            name: "线路1 (稳定秒播)",
+            episodes: [
+              { name: "第1集", url: "https://play.xluuss.com/play/7e52BRqa/index.m3u8" },
+              { name: "第2集", url: "https://play.xluuss.com/play/negwR2Ze/index.m3u8" },
+              { name: "第3集", url: "https://play.xluuss.com/play/bo2YjNka/index.m3u8" },
+              { name: "第4集", url: "https://play.xluuss.com/play/rb231MGe/index.m3u8" },
+              { name: "第5集", url: "https://play.xluuss.com/play/rb231Mde/index.m3u8" },
+              { name: "第6集", url: "https://play.xluuss.com/play/rb2314Le/index.m3u8" },
+              { name: "第7集", url: "https://play.xluuss.com/play/vbm3x3qd/index.m3u8" },
+              { name: "第8集", url: "https://play.xluuss.com/play/negwrPje/index.m3u8" }
+            ]
+          },
+          {
+            name: "线路2 (备用极速)",
+            episodes: [
+              { name: "第1集", url: "https://v.gsuus.com/play/Rb41Azgd/index.m3u8" },
+              { name: "第2集", url: "https://v.gsuus.com/play/dJ6ZvXDd/index.m3u8" },
+              { name: "第3集", url: "https://v.gsuus.com/play/xe7Z6O1b/index.m3u8" },
+              { name: "第4集", url: "https://v.gsuus.com/play/6dBRoVva/index.m3u8" }
+            ]
+          }
+        ]
+      };
+
+      try {
+        // If server is running, save via server
+        const res = await fetch('/api/save-video', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ video: demoVideo })
+        });
+        if (res.ok) {
+          alert('演示影片已成功保存到网站！');
+          window.location.reload();
+          return;
+        }
+      } catch (e) {
+        // Fallback: in-memory / local preview
+      }
+
+      allVideos = [demoVideo];
+      renderFilteredVideos();
+      alert('已加载演示数据！您可以点击卡片观看或在管理后台测试真实链接！');
+    }
+  </script>
+</body>
+</html>

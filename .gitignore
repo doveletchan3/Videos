@@ -1,0 +1,14 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local-only Admin & Scraper Tools
+# (Excluded from GitHub public repository so the admin panel is kept private on your PC)
+admin.html
+server.py
+add_video.py
+start_server.bat
+
+# OS files
+.DS_Store
+Thumbs.db

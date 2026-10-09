@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>播放历史 - 视频流媒体</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Header with Logo and Search -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-top">
+        <a href="index.html" class="brand-logo" title="返回首页"></a>
+        <div class="search-box-wrap">
+          <form id="searchForm" class="search-form">
+            <input type="text" id="searchInput" class="search-input" placeholder="请输入影片、短剧、演职人员" autocomplete="off">
+            <button type="submit" class="search-btn">搜索</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sub Navigation Bar -->
+  <nav class="sub-nav">
+    <div class="container">
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="index.html?cat=电影">电影</a></li>
+        <li><a href="index.html?cat=剧集">剧集</a></li>
+        <li><a href="index.html?cat=榜单">榜单</a></li>
+        <li class="nav-right">
+          <a href="history.html" class="nav-history-link" style="color: var(--primary-color); font-weight: bold;">播放历史</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="admin-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 class="admin-card-title" style="margin-bottom: 0;">🕒 您的播放历史记录</h2>
+        <button onclick="clearAllHistory()" class="btn-danger">清空所有记录</button>
+      </div>
+      <p class="admin-card-subtitle">播放进度保存在您的本地浏览器中，随时可一键继续播放。</p>
+
+      <div id="historyListContainer">
+        <!-- Rendered history table -->
+      </div>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initCommonHeader('history');
+      renderHistory();
+    });
+
+    function renderHistory() {
+      const container = document.getElementById('historyListContainer');
+      const list = WatchHistory.getAll();
+
+      if (!list || list.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 40px 20px;">
+            <h3>暂无播放历史记录</h3>
+            <p>您观看过的影片和进度会自动记录在此处，方便您随时继续收看。</p>
+            <a href="index.html" class="btn-primary">去首页逛逛</a>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th style="width: 80px;">海报</th>
+              <th>影片名称</th>
+              <th>上次观看集数</th>
+              <th>播放进度</th>
+              <th>观看时间</th>
+              <th style="width: 140px;">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      list.forEach(item => {
+        const timeStr = `${formatTime(item.currentTime)} / ${formatTime(item.duration)}`;
+        const dateStr = item.updatedAt ? new Date(item.updatedAt).toLocaleString() : '-';
+        const posterUrl = item.poster || APP_CONFIG.DEFAULT_FALLBACK_POSTER;
+
+        html += `
+          <tr>
+            <td>
+              <img src="${posterUrl}" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;" onerror="this.src=APP_CONFIG.DEFAULT_FALLBACK_POSTER">
+            </td>
+            <td>
+              <strong>${item.title}</strong>
+              <div style="font-size: 12px; color: #888;">${item.category || '剧集'} · ${item.sourceName || '线路'}</div>
+            </td>
+            <td><span style="background: #eef5fe; color: #2b85e4; padding: 2px 8px; border-radius: 4px; font-size: 13px;">${item.epName || '第1集'}</span></td>
+            <td>${timeStr}</td>
+            <td style="font-size: 13px; color: #777;">${dateStr}</td>
+            <td>
+              <a href="play.html?id=${encodeURIComponent(item.id)}&src=${item.sourceIndex}&ep=${item.epIndex}" class="btn-primary" style="padding: 4px 10px; font-size: 12px; margin-right: 6px;">继续播放</a>
+              <button onclick="removeHistory('${item.id}')" class="btn-secondary" style="padding: 4px 8px; font-size: 12px;">删除</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function removeHistory(id) {
+      WatchHistory.remove(id);
+      renderHistory();
+    }
+
+    function clearAllHistory() {
+      if (confirm('确定要清空所有的观看历史记录吗？')) {
+        WatchHistory.clear();
+        renderHistory();
+      }
+    }
+  </script>
+</body>
+</html>
