@@ -1,7 +1,7 @@
 [
   {
     "id": "582011",
-    "title": "Agents of S.H.I.E.L.D. S5",
+    "title": "[S5] Agents of S.H.I.E.L.D.",
     "poster": "data/posters/582011.jpg",
     "category": "劇集",
     "subcategory": "美劇",
@@ -306,11 +306,11 @@
         ]
       }
     ],
-    "updatedAt": "2026-10-09T17:32:47.120938"
+    "updatedAt": "2026-10-09T18:03:13.533623"
   },
   {
     "id": "379198",
-    "title": "Agents of S.H.I.E.L.D. S4",
+    "title": "[S4] Agents of S.H.I.E.L.D.",
     "poster": "data/posters/379198.jpg",
     "category": "劇集",
     "subcategory": "美劇",
@@ -615,11 +615,11 @@
         ]
       }
     ],
-    "updatedAt": "2026-10-09T17:30:59.779149"
+    "updatedAt": "2026-10-09T18:04:11.998331"
   },
   {
     "id": "406729",
-    "title": "Agents of S.H.I.E.L.D. S3",
+    "title": "[S3] Agents of S.H.I.E.L.D.",
     "poster": "data/posters/406729.jpg",
     "category": "劇集",
     "subcategory": "美劇",
@@ -924,11 +924,11 @@
         ]
       }
     ],
-    "updatedAt": "2026-10-09T17:28:33.055761"
+    "updatedAt": "2026-10-09T18:04:41.861210"
   },
   {
     "id": "385218",
-    "title": "Agents of S.H.I.E.L.D. S2",
+    "title": "[S2] Agents of S.H.I.E.L.D.",
     "poster": "data/posters/385218.jpg",
     "category": "劇集",
     "subcategory": "美劇",
@@ -1233,11 +1233,11 @@
         ]
       }
     ],
-    "updatedAt": "2026-10-09T17:24:20.382685"
+    "updatedAt": "2026-10-09T18:05:32.959273"
   },
   {
     "id": "418851",
-    "title": "Agents of S.H.I.E.L.D. S1",
+    "title": "[S1] Agents of S.H.I.E.L.D.",
     "poster": "data/posters/418851.jpg",
     "category": "劇集",
     "subcategory": "美劇",
@@ -1542,7 +1542,7 @@
         ]
       }
     ],
-    "updatedAt": "2026-10-09T17:26:21.948903"
+    "updatedAt": "2026-10-09T18:06:19.832507"
   },
   {
     "id": "986740",
