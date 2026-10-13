@@ -48,9 +48,12 @@
   <main class="container">
 
     <!-- Video Player Container (16:9) -->
-    <div class="player-wrapper" id="playerWrapper" tabindex="0" title="遙控器按 OK 鍵播放/暫停，左右鍵快進/快退 10 秒">
+    <div class="player-wrapper" id="playerWrapper" tabindex="0" title="遙控器按 OK 鍵播放/暫停，左右鍵快進/快退 10 秒，雙擊 OK 或按菜單鍵全螢幕">
       <video id="mainVideoPlayer" controls playsinline preload="metadata"></video>
       <div id="tvSeekToast" class="tv-player-toast"></div>
+      <button id="playerFloatFsBtn" onclick="toggleFullScreen(event)" class="player-fs-btn" title="切換全螢幕 (遙控器雙擊OK或按菜單鍵)" tabindex="0" role="button">
+        ⛶ 全螢幕
+      </button>
       <div id="playerLoading" class="player-loading-overlay" style="display: none;">
         <div class="spinner"></div>
         <div id="loadingText">視頻加載中，請稍候...</div>
@@ -89,6 +92,7 @@
         <div id="currentPlayStatus" style="margin-bottom: 14px; font-size: 13px; color: #555; background: #f0f7ff; padding: 6px 12px; border-radius: 4px; display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px;">
           <div><span id="playStatusPrefix">當前已選分集：</span><strong id="playingEpLabel" style="color: var(--primary-color);">-</strong></div>
           <span id="historyResumeBadge" style="display: none; background: #ecfdf5; color: #059669; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid #a7f3d0; font-size: 12px;"></span>
+          <button id="fullScreenBtn" onclick="toggleFullScreen(event)" class="btn-primary" style="padding: 2px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; border: none; margin-left: 4px;" title="切換全螢幕 (遙控器按兩下 OK 或按菜單鍵)">⛶ 全螢幕</button>
         </div>
 
         <!-- Sources and Episode Buttons Container -->
@@ -116,6 +120,7 @@
         <div class="sidebar-box" style="margin-top: 16px;">
           <h4 style="font-size: 14px; margin-bottom: 8px;">快捷操作</h4>
           <div style="display: flex; gap: 8px; flex-direction: column;">
+            <button onclick="toggleFullScreen(event)" class="btn-primary" style="width: 100%; text-align: center;">⛶ 全螢幕播放</button>
             <button onclick="copyShareLink()" class="btn-secondary" style="width: 100%; text-align: center;">🔗 複製本片播放連結</button>
             <a href="index.html" class="btn-outline" style="width: 100%; text-align: center;">🏠 返回視頻首頁</a>
           </div>
@@ -562,6 +567,9 @@
         showTvToast(`⏱️ 繼續播放：${formatTime(pendingResumeTime)}`);
       }
 
+      // Automatically enter full screen when starting playback on TV Box
+      toggleFullScreen();
+
       videoEl.play().catch((err) => {
         console.warn('Play error:', err);
       });
@@ -781,6 +789,63 @@
       showTvToast(`${icon} ${Math.abs(sec)}秒 &nbsp;(${formatTime(targetTime)} / ${formatTime(videoEl.duration)})`);
     }
 
+    // Fullscreen Toggle Helper
+    function toggleFullScreen(e) {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      const player = document.getElementById('playerWrapper') || videoEl;
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+
+      if (!isFs) {
+        const req = player.requestFullscreen || player.webkitRequestFullscreen || player.mozRequestFullScreen || player.msRequestFullscreen;
+        if (req) {
+          req.call(player).catch(() => {
+            if (videoEl.requestFullscreen) videoEl.requestFullscreen().catch(() => {});
+            else if (videoEl.webkitEnterFullscreen) videoEl.webkitEnterFullscreen();
+          });
+        } else if (videoEl.webkitEnterFullscreen) {
+          videoEl.webkitEnterFullscreen();
+        }
+        showTvToast('⛶ 進入全螢幕');
+        updateFsButtonState(true);
+      } else {
+        const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+        if (exit) {
+          exit.call(document).catch(() => {});
+        }
+        showTvToast('🗗 退出全螢幕');
+        updateFsButtonState(false);
+      }
+    }
+
+    function updateFsButtonState(isFs) {
+      const fsBtns = [document.getElementById('fullScreenBtn'), document.getElementById('playerFloatFsBtn')];
+      fsBtns.forEach(btn => {
+        if (btn) {
+          btn.innerHTML = isFs ? '🗗 退出全螢幕' : '⛶ 全螢幕';
+        }
+      });
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      updateFsButtonState(isFs);
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      updateFsButtonState(isFs);
+    });
+
+    // Double-click on player to toggle fullscreen
+    const playerWrapEl = document.getElementById('playerWrapper');
+    if (playerWrapEl) {
+      playerWrapEl.addEventListener('dblclick', toggleFullScreen);
+    }
+    if (videoEl) {
+      videoEl.addEventListener('dblclick', toggleFullScreen);
+    }
+
+    let lastOkPressTime = 0;
+
     // Android TV Remote Control Hook for Video Player
     window.handleTvPlayerKey = function({
       isUp, isDown, isLeft, isRight, isEnter, isBack,
@@ -790,6 +855,14 @@
       const playerWrapper = document.getElementById('playerWrapper');
       const isFocusedOnPlayer = (document.activeElement === playerWrapper || document.activeElement === videoEl);
       const isFocusedOnEpBtn = document.activeElement && document.activeElement.classList.contains('episode-btn');
+
+      // Remote shortcut keys for Fullscreen: F key (70) or Menu key (82) or ContextMenu
+      const code = e ? (e.keyCode || e.which) : 0;
+      const key = e ? e.key : '';
+      if (key === 'f' || key === 'F' || code === 70 || code === 82 || key === 'ContextMenu') {
+        toggleFullScreen();
+        return true;
+      }
 
       // Hardware Media Keys
       if (isMediaPlayPause) {
@@ -808,6 +881,14 @@
       // If user is focused on player wrapper
       if (isFocusedOnPlayer) {
         if (isEnter) {
+          const now = Date.now();
+          if (now - lastOkPressTime < 450) {
+            // Double-click OK: Toggle Fullscreen!
+            lastOkPressTime = 0;
+            toggleFullScreen();
+            return true;
+          }
+          lastOkPressTime = now;
           togglePlayPause();
           return true;
         }

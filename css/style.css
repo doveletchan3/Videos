@@ -567,6 +567,58 @@ a:hover {
   background: #000;
 }
 
+/* Player Fullscreen Floating Button */
+.player-fs-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 25;
+  backdrop-filter: blur(6px);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.player-fs-btn:hover, .player-fs-btn:focus, .player-fs-btn.tv-focused {
+  background: rgba(43, 133, 228, 0.95);
+  border-color: #fff;
+  transform: scale(1.06);
+}
+
+/* Fullscreen Styles for Player Wrapper */
+.player-wrapper:fullscreen,
+.player-wrapper:-webkit-full-screen,
+.player-wrapper:-moz-full-screen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+  z-index: 99999 !important;
+}
+
+.player-wrapper:fullscreen video,
+.player-wrapper:-webkit-full-screen video,
+.player-wrapper:-moz-full-screen video {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-height: none !important;
+  object-fit: contain !important;
+}
+
+
 .player-loading-overlay {
   position: absolute;
   inset: 0;
