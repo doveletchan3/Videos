@@ -48,14 +48,15 @@
   <main class="container">
 
     <!-- Video Player Container (16:9) -->
-    <div class="player-wrapper">
+    <div class="player-wrapper" id="playerWrapper" tabindex="0" title="遙控器按 OK 鍵播放/暫停，左右鍵快進/快退 10 秒">
       <video id="mainVideoPlayer" controls playsinline preload="metadata"></video>
+      <div id="tvSeekToast" class="tv-player-toast"></div>
       <div id="playerLoading" class="player-loading-overlay" style="display: none;">
         <div class="spinner"></div>
         <div id="loadingText">視頻加載中，請稍候...</div>
       </div>
       <!-- Center Play Button Overlay -->
-      <div id="centerPlayOverlay" class="center-play-overlay" onclick="startPlaybackFromCenterBtn()" title="點擊播放">
+      <div id="centerPlayOverlay" class="center-play-overlay" onclick="startPlaybackFromCenterBtn()" title="點擊播放" tabindex="0" role="button">
         <div class="center-play-icon">
           <svg viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z"/>
@@ -300,7 +301,7 @@
         header.innerHTML = `
           <div class="source-title">
             <span>${lineName} (${langVal}) (${epCount} 集)</span>
-            <span id="speed-badge-${sIdx}" class="speed-badge testing" title="點擊重新測速" onclick="testSingleSourceSpeed(${sIdx})">
+            <span id="speed-badge-${sIdx}" class="speed-badge testing" title="點擊重新測速" tabindex="0" role="button" onclick="testSingleSourceSpeed(${sIdx})">
               <span class="speed-dot"></span><span class="speed-val">測速中...</span>
             </span>
           </div>
@@ -317,6 +318,8 @@
             btn.id = `ep-btn-${sIdx}-${eIdx}`;
             btn.textContent = ep.name || `第${eIdx + 1}集`;
             btn.title = ep.name;
+            btn.setAttribute('tabindex', '0');
+            btn.setAttribute('role', 'button');
             btn.onclick = () => playEpisode(sIdx, eIdx, 0, true);
             epGrid.appendChild(btn);
           });
@@ -330,6 +333,14 @@
 
       // Automatically test network latency for all sources
       testAllSourcesSpeed();
+
+      // Auto-focus active episode button on TV Box for instant remote readiness
+      setTimeout(() => {
+        const activeEp = document.querySelector('.episode-btn.active') || document.querySelector('.episode-btn');
+        if (activeEp && typeof TvSpatialNav !== 'undefined') {
+          TvSpatialNav.focusElement(activeEp);
+        }
+      }, 180);
     }
 
     async function measureStreamLatency(url) {
@@ -646,6 +657,105 @@
         prompt('請複製以下連結：', url);
       }
     }
+
+    // TV Remote Video Player OSD Toast
+    let tvToastTimer = null;
+    function showTvToast(html) {
+      const toast = document.getElementById('tvSeekToast');
+      if (!toast) return;
+      toast.innerHTML = html;
+      toast.classList.add('show');
+      clearTimeout(tvToastTimer);
+      tvToastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 1600);
+    }
+
+    function togglePlayPause() {
+      if (!videoEl) return;
+      if (videoEl.paused) {
+        videoEl.play().catch(() => {});
+        showTvToast('▶️ 繼續播放');
+      } else {
+        videoEl.pause();
+        showTvToast('⏸️ 暫停播放');
+      }
+    }
+
+    function seekRelative(sec) {
+      if (!videoEl || isNaN(videoEl.duration)) return;
+      const targetTime = Math.max(0, Math.min(videoEl.duration, videoEl.currentTime + sec));
+      videoEl.currentTime = targetTime;
+      const icon = sec > 0 ? '⏩ 快進' : '⏪ 快退';
+      showTvToast(`${icon} ${Math.abs(sec)}秒 &nbsp;(${formatTime(targetTime)} / ${formatTime(videoEl.duration)})`);
+    }
+
+    // Android TV Remote Control Hook for Video Player
+    window.handleTvPlayerKey = function({
+      isUp, isDown, isLeft, isRight, isEnter, isBack,
+      isMediaPlayPause, isMediaFastForward, isMediaRewind,
+      e
+    }) {
+      const playerWrapper = document.getElementById('playerWrapper');
+      const isFocusedOnPlayer = (document.activeElement === playerWrapper || document.activeElement === videoEl);
+      const isFocusedOnEpBtn = document.activeElement && document.activeElement.classList.contains('episode-btn');
+
+      // Hardware Media Keys
+      if (isMediaPlayPause) {
+        togglePlayPause();
+        return true;
+      }
+      if (isMediaFastForward) {
+        seekRelative(10);
+        return true;
+      }
+      if (isMediaRewind) {
+        seekRelative(-10);
+        return true;
+      }
+
+      // If user is focused on player wrapper
+      if (isFocusedOnPlayer) {
+        if (isEnter) {
+          togglePlayPause();
+          return true;
+        }
+        if (isLeft) {
+          seekRelative(-10);
+          return true;
+        }
+        if (isRight) {
+          seekRelative(10);
+          return true;
+        }
+        if (isDown) {
+          // Move focus down to episode list
+          const activeEp = document.querySelector('.episode-btn.active') || document.querySelector('.episode-btn');
+          if (activeEp && typeof TvSpatialNav !== 'undefined') {
+            TvSpatialNav.focusElement(activeEp);
+            return true;
+          }
+        }
+      }
+
+      // If focused on top row of episode buttons, pressing Up moves focus back to player
+      if (isFocusedOnEpBtn && isUp) {
+        const curRect = document.activeElement.getBoundingClientRect();
+        const parentGrid = document.activeElement.closest('.episode-grid');
+        if (parentGrid) {
+          const firstBtn = parentGrid.querySelector('.episode-btn');
+          if (firstBtn && Math.abs(firstBtn.getBoundingClientRect().top - curRect.top) < 18) {
+            if (playerWrapper && typeof TvSpatialNav !== 'undefined') {
+              TvSpatialNav.focusElement(playerWrapper);
+              scrollVideoToTop(true);
+              return true;
+            }
+          }
+        }
+      }
+
+      return false;
+    };
   </script>
 </body>
 </html>

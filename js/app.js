@@ -186,54 +186,197 @@ function initCommonHeader(activeNav = 'home') {
   initTvRemoteNavigation();
 }
 
+/**
+ * Android TV / TV Box 2D Spatial Navigation Engine
+ * Uses visual 2D geometric vector alignment to determine next element on D-Pad press
+ */
+const TvSpatialNav = {
+  SELECTOR: 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"], .video-card, .tag-pill, .episode-btn, .speed-badge, .player-wrapper',
+
+  getFocusableElements() {
+    return Array.from(document.querySelectorAll(this.SELECTOR)).filter(el => {
+      if (el.disabled || el.getAttribute('aria-hidden') === 'true') return false;
+      const rect = el.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return false;
+      const style = window.getComputedStyle(el);
+      return style.visibility !== 'hidden' && style.display !== 'none' && style.opacity !== '0';
+    });
+  },
+
+  findNextElement(direction, currentEl) {
+    const focusables = this.getFocusableElements();
+    if (!focusables.length) return null;
+    if (!currentEl || !document.body.contains(currentEl) || currentEl === document.body) {
+      return focusables[0];
+    }
+
+    const curRect = currentEl.getBoundingClientRect();
+    const curCenterX = curRect.left + curRect.width / 2;
+    const curCenterY = curRect.top + curRect.height / 2;
+
+    let bestElement = null;
+    let minScore = Infinity;
+
+    for (const el of focusables) {
+      if (el === currentEl) continue;
+      const r = el.getBoundingClientRect();
+      const elCenterX = r.left + r.width / 2;
+      const elCenterY = r.top + r.height / 2;
+
+      let isValidDirection = false;
+      let primaryDiff = 0;
+      let secondaryDiff = 0;
+
+      switch (direction) {
+        case 'right':
+          if (r.left >= curRect.left + 5 || (elCenterX > curCenterX && r.left >= curRect.left)) {
+            isValidDirection = true;
+            primaryDiff = Math.max(0, r.left - curRect.right);
+            secondaryDiff = Math.abs(elCenterY - curCenterY);
+          }
+          break;
+        case 'left':
+          if (r.right <= curRect.right - 5 || (elCenterX < curCenterX && r.right <= curRect.right)) {
+            isValidDirection = true;
+            primaryDiff = Math.max(0, curRect.left - r.right);
+            secondaryDiff = Math.abs(elCenterY - curCenterY);
+          }
+          break;
+        case 'down':
+          if (r.top >= curRect.top + 5 || (elCenterY > curCenterY && r.top >= curRect.top)) {
+            isValidDirection = true;
+            primaryDiff = Math.max(0, r.top - curRect.bottom);
+            secondaryDiff = Math.abs(elCenterX - curCenterX);
+          }
+          break;
+        case 'up':
+          if (r.bottom <= curRect.bottom - 5 || (elCenterY < curCenterY && r.bottom <= curRect.bottom)) {
+            isValidDirection = true;
+            primaryDiff = Math.max(0, curRect.top - r.bottom);
+            secondaryDiff = Math.abs(elCenterX - curCenterX);
+          }
+          break;
+      }
+
+      if (isValidDirection) {
+        // Prioritize alignment along main travel axis, penalize lateral deviation
+        const score = primaryDiff + (secondaryDiff * 2.2);
+        if (score < minScore) {
+          minScore = score;
+          bestElement = el;
+        }
+      }
+    }
+
+    return bestElement;
+  },
+
+  focusElement(el) {
+    if (!el) return;
+    document.querySelectorAll('.tv-focused').forEach(node => node.classList.remove('tv-focused'));
+    el.focus();
+    el.classList.add('tv-focused');
+    el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+  },
+
+  navigate(direction) {
+    const currentEl = document.activeElement;
+    const nextEl = this.findNextElement(direction, currentEl);
+    if (nextEl) {
+      this.focusElement(nextEl);
+      return true;
+    }
+    return false;
+  }
+};
+
 // Android TV / TV Box Remote Control D-pad support
 function initTvRemoteNavigation() {
-  window.addEventListener('keydown', (e) => {
-    // Arrow keys, Enter, Back
-    const tvKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Escape'];
-    if (!tvKeys.includes(e.key)) return;
+  document.addEventListener('focusout', (e) => {
+    if (e.target && e.target.classList) {
+      e.target.classList.remove('tv-focused');
+    }
+  });
 
-    // If typing in search input, let default behavior work unless Down is pressed
-    if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-      if (e.key === 'ArrowDown') {
-        document.activeElement.blur();
-      } else {
+  window.addEventListener('keydown', (e) => {
+    const code = e.keyCode || e.which;
+    const key = e.key;
+
+    // Check key types across different Android TV boxes
+    const isUp = key === 'ArrowUp' || code === 38 || code === 19;
+    const isDown = key === 'ArrowDown' || code === 40 || code === 20;
+    const isLeft = key === 'ArrowLeft' || code === 37 || code === 21;
+    const isRight = key === 'ArrowRight' || code === 39 || code === 22;
+    const isEnter = key === 'Enter' || code === 13 || code === 23 || code === 66;
+    const isBack = key === 'Escape' || key === 'Back' || key === 'GoBack' || code === 27 || code === 4;
+
+    // Media keys
+    const isMediaPlayPause = key === 'MediaPlayPause' || code === 179 || code === 85 || code === 126 || code === 127;
+    const isMediaFastForward = key === 'MediaFastForward' || code === 228 || code === 90;
+    const isMediaRewind = key === 'MediaRewind' || code === 227 || code === 89;
+
+    const activeEl = document.activeElement;
+    const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+
+    // Handle typing in search input
+    if (isInput) {
+      if (isDown) {
+        activeEl.blur();
+        TvSpatialNav.navigate('down');
+        e.preventDefault();
+        return;
+      }
+      if (isEnter) {
+        return; // submit form
+      }
+      if (isBack) {
+        activeEl.blur();
+        e.preventDefault();
+        return;
+      }
+      return;
+    }
+
+    // Special Video Player Hook in play.html
+    if (typeof window.handleTvPlayerKey === 'function') {
+      const handled = window.handleTvPlayerKey({
+        isUp, isDown, isLeft, isRight, isEnter, isBack,
+        isMediaPlayPause, isMediaFastForward, isMediaRewind,
+        e
+      });
+      if (handled) {
+        e.preventDefault();
         return;
       }
     }
 
-    const focusables = Array.from(document.querySelectorAll(
-      'a, button, input, .video-card, .tag-pill, .ep-btn, .line-btn'
-    )).filter(el => el.offsetParent !== null && !el.disabled);
-
-    if (focusables.length === 0) return;
-
-    const currentIdx = focusables.indexOf(document.activeElement);
-
-    if (e.key === 'ArrowRight') {
-      const next = currentIdx >= 0 && currentIdx < focusables.length - 1 ? focusables[currentIdx + 1] : focusables[0];
-      next.focus();
-      e.preventDefault();
-    } else if (e.key === 'ArrowLeft') {
-      const prev = currentIdx > 0 ? focusables[currentIdx - 1] : focusables[focusables.length - 1];
-      prev.focus();
-      e.preventDefault();
-    } else if (e.key === 'ArrowDown') {
-      // jump forward by ~4 items or next row
-      const step = window.innerWidth > 900 ? 5 : 3;
-      const target = currentIdx + step < focusables.length ? focusables[currentIdx + step] : focusables[focusables.length - 1];
-      target.focus();
-      e.preventDefault();
-    } else if (e.key === 'ArrowUp') {
-      const step = window.innerWidth > 900 ? 5 : 3;
-      const target = currentIdx - step >= 0 ? focusables[currentIdx - step] : focusables[0];
-      target.focus();
-      e.preventDefault();
-    } else if (e.key === 'Escape') {
-      // Go back to home if not on home
-      if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/' && !window.location.pathname.endsWith('/')) {
+    // Standard D-pad Navigation
+    if (isRight) {
+      if (TvSpatialNav.navigate('right')) e.preventDefault();
+    } else if (isLeft) {
+      if (TvSpatialNav.navigate('left')) e.preventDefault();
+    } else if (isDown) {
+      if (TvSpatialNav.navigate('down')) e.preventDefault();
+    } else if (isUp) {
+      if (TvSpatialNav.navigate('up')) e.preventDefault();
+    } else if (isEnter) {
+      if (activeEl && typeof activeEl.click === 'function') {
+        activeEl.click();
+        e.preventDefault();
+      }
+    } else if (isBack) {
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        e.preventDefault();
+        return;
+      }
+      const path = window.location.pathname;
+      if (!path.endsWith('index.html') && path !== '/' && !path.endsWith('/')) {
         window.location.href = 'index.html';
+        e.preventDefault();
       }
     }
   });
 }
+

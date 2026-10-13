@@ -280,8 +280,19 @@
           </div>
           <div class="video-card-title" title="${video.title}">${video.title}</div>
         `;
+        card.setAttribute('tabindex', '0');
         grid.appendChild(card);
       });
+
+      // Auto-focus first video card for immediate TV Box remote control
+      if (!document.activeElement || document.activeElement === document.body) {
+        setTimeout(() => {
+          const firstCard = grid.querySelector('.video-card');
+          if (firstCard && typeof TvSpatialNav !== 'undefined') {
+            TvSpatialNav.focusElement(firstCard);
+          }
+        }, 120);
+      }
     }
 
     function renderCategorySubFilterUI() {
@@ -305,7 +316,14 @@
           btn.className = 'tag-pill' + (t === currentTag ? ' active' : '');
           btn.textContent = t;
           btn.style.cursor = 'pointer';
+          btn.setAttribute('tabindex', '0');
+          btn.setAttribute('role', 'button');
           btn.onclick = () => filterTag(t);
+          btn.onkeydown = (e) => {
+            if (e.key === 'Enter' || e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 66) {
+              filterTag(t);
+            }
+          };
           subcatBar.appendChild(btn);
         });
       }
@@ -320,7 +338,14 @@
         btn.className = 'tag-pill' + (yr === currentYear ? ' active' : '');
         btn.textContent = yr;
         btn.style.cursor = 'pointer';
+        btn.setAttribute('tabindex', '0');
+        btn.setAttribute('role', 'button');
         btn.onclick = () => filterYear(yr);
+        btn.onkeydown = (e) => {
+          if (e.key === 'Enter' || e.keyCode === 13 || e.keyCode === 23 || e.keyCode === 66) {
+            filterYear(yr);
+          }
+        };
         yearBar.appendChild(btn);
       });
     }

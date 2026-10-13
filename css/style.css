@@ -103,12 +103,54 @@ a:hover {
 }
 
 /* TV Box / Remote Focus Highlight */
-:focus-visible, .tv-focused {
+:focus-visible, .tv-focused,
+.video-card:focus, .tag-pill:focus, .episode-btn:focus,
+.btn-primary:focus, .btn-secondary:focus, .btn-outline:focus,
+.speed-badge:focus {
   outline: 3px solid #2b85e4 !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 12px rgba(43, 133, 228, 0.6) !important;
-  transform: scale(1.03);
+  outline-offset: 3px !important;
+  box-shadow: 0 0 18px rgba(43, 133, 228, 0.8), 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  transform: scale(1.05);
+  z-index: 20;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, outline 0.15s ease;
 }
+
+.player-wrapper:focus, .player-wrapper.tv-focused {
+  outline: 4px solid #2b85e4 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 24px rgba(43, 133, 228, 0.85) !important;
+  transform: none !important;
+}
+
+/* TV Video Player OSD Toast for Remote Seek & Pause */
+.tv-player-toast {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(15, 23, 42, 0.88);
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+  z-index: 35;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+}
+.tv-player-toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.02);
+}
+
 
 .search-box-wrap {
   flex: 1;
