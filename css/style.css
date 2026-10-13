@@ -567,32 +567,132 @@ a:hover {
   background: #000;
 }
 
-/* Player Fullscreen Floating Button */
-.player-fs-btn {
+/* Player Top Floating Bar (Brightness & Fullscreen) */
+.player-top-floating-bar {
   position: absolute;
   top: 14px;
   right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 25;
+}
+
+.player-float-btn,
+.player-fs-btn {
   background: rgba(0, 0, 0, 0.65);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 6px;
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 6px 12px;
+  font-size: 12px;
   font-weight: 600;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   cursor: pointer;
-  z-index: 25;
   backdrop-filter: blur(6px);
   transition: all 0.2s ease;
   user-select: none;
 }
 
+.player-float-btn:hover, .player-float-btn:focus, .player-float-btn.tv-focused,
 .player-fs-btn:hover, .player-fs-btn:focus, .player-fs-btn.tv-focused {
   background: rgba(43, 133, 228, 0.95);
   border-color: #fff;
-  transform: scale(1.06);
+  transform: scale(1.05);
+  outline: none;
+}
+
+/* Brightness Toolbar under player */
+.brightness-toolbar {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ffffff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #cce0ff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.brightness-label {
+  font-weight: 600;
+  color: #1e6bb8;
+  font-size: 12px;
+  margin-right: 2px;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.brightness-btn-step {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  color: #334155;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.brightness-btn-step:hover,
+.brightness-btn-step:focus,
+.brightness-btn-step.tv-focused {
+  background: #2b85e4;
+  color: #fff;
+  border-color: #2b85e4;
+  outline: none;
+}
+
+.brightness-val {
+  font-weight: 700;
+  min-width: 42px;
+  text-align: center;
+  color: #0f172a;
+  font-size: 12px;
+  user-select: none;
+}
+
+.brightness-preset-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 3px;
+}
+
+.brightness-btn-preset {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.brightness-btn-preset:hover,
+.brightness-btn-preset:focus,
+.brightness-btn-preset.tv-focused {
+  background: #e2e8f0;
+  color: #0f172a;
+  outline: none;
+}
+
+.brightness-btn-preset.active {
+  background: #2b85e4;
+  color: #ffffff;
+  border-color: #2b85e4;
+  font-weight: 600;
 }
 
 /* Fullscreen Styles for Player Wrapper */

@@ -51,9 +51,14 @@
     <div class="player-wrapper" id="playerWrapper" tabindex="0" title="遙控器按 OK 鍵播放/暫停，左右鍵快進/快退 10 秒，雙擊 OK 或按菜單鍵全螢幕">
       <video id="mainVideoPlayer" controls playsinline preload="metadata"></video>
       <div id="tvSeekToast" class="tv-player-toast"></div>
-      <button id="playerFloatFsBtn" onclick="toggleFullScreen(event)" class="player-fs-btn" title="切換全螢幕 (遙控器雙擊OK或按菜單鍵)" tabindex="0" role="button">
-        ⛶ 全螢幕
-      </button>
+      <div class="player-top-floating-bar">
+        <button id="playerFloatBrightnessBtn" onclick="cycleBrightness(event)" class="player-float-btn" title="循環調整畫面亮度 (遙控器按 B 鍵切換)" tabindex="0" role="button">
+          🔆 <span id="floatBrightnessText">亮度 100%</span>
+        </button>
+        <button id="playerFloatFsBtn" onclick="toggleFullScreen(event)" class="player-float-btn" title="切換全螢幕 (遙控器雙擊OK或按菜單鍵)" tabindex="0" role="button">
+          ⛶ 全螢幕
+        </button>
+      </div>
       <div id="playerLoading" class="player-loading-overlay" style="display: none;">
         <div class="spinner"></div>
         <div id="loadingText">視頻加載中，請稍候...</div>
@@ -88,11 +93,27 @@
           (線路利用網路爬蟲技術獲取，各線路的版本、清晰度、播放速度等存在差異請自行切換。建議避開晚上高峯時段。)
         </p>
 
-        <!-- Current Playing Status Badge -->
-        <div id="currentPlayStatus" style="margin-bottom: 14px; font-size: 13px; color: #555; background: #f0f7ff; padding: 6px 12px; border-radius: 4px; display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <div><span id="playStatusPrefix">當前已選分集：</span><strong id="playingEpLabel" style="color: var(--primary-color);">-</strong></div>
-          <span id="historyResumeBadge" style="display: none; background: #ecfdf5; color: #059669; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid #a7f3d0; font-size: 12px;"></span>
-          <button id="fullScreenBtn" onclick="toggleFullScreen(event)" class="btn-primary" style="padding: 2px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; border: none; margin-left: 4px;" title="切換全螢幕 (遙控器按兩下 OK 或按菜單鍵)">⛶ 全螢幕</button>
+        <!-- Current Playing Status Badge & Brightness Tuning -->
+        <div id="currentPlayStatus" style="margin-bottom: 14px; font-size: 13px; color: #555; background: #f0f7ff; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div><span id="playStatusPrefix">當前已選分集：</span><strong id="playingEpLabel" style="color: var(--primary-color);">-</strong></div>
+            <span id="historyResumeBadge" style="display: none; background: #ecfdf5; color: #059669; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid #a7f3d0; font-size: 12px;"></span>
+            <button id="fullScreenBtn" onclick="toggleFullScreen(event)" class="btn-primary" style="padding: 2px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; border: none; margin-left: 4px;" title="切換全螢幕 (遙控器按兩下 OK 或按菜單鍵)">⛶ 全螢幕</button>
+          </div>
+
+          <!-- Video Brightness Toolbar -->
+          <div class="brightness-toolbar" title="視頻畫面過暗時可調高亮度">
+            <span class="brightness-label">🔆 畫面亮度</span>
+            <button type="button" onclick="adjustBrightness(-10)" class="brightness-btn-step" title="調暗 10%" tabindex="0">-</button>
+            <span id="brightnessValueText" class="brightness-val">100%</span>
+            <button type="button" onclick="adjustBrightness(10)" class="brightness-btn-step" title="增亮 10%" tabindex="0">+</button>
+            <div class="brightness-preset-group">
+              <button type="button" onclick="setBrightness(100)" class="brightness-btn-preset active" data-b="100" tabindex="0">標準</button>
+              <button type="button" onclick="setBrightness(125)" class="brightness-btn-preset" data-b="125" tabindex="0">微亮</button>
+              <button type="button" onclick="setBrightness(150)" class="brightness-btn-preset" data-b="150" tabindex="0">高亮</button>
+              <button type="button" onclick="setBrightness(180)" class="brightness-btn-preset" data-b="180" tabindex="0">超亮</button>
+            </div>
+          </div>
         </div>
 
         <!-- Sources and Episode Buttons Container -->
@@ -114,15 +135,6 @@
               <div class="media-meta-row"><strong>地區：</strong><span id="detailRegion">-</span></div>
               <div class="media-meta-row"><strong>主演：</strong><span id="detailActors">-</span></div>
             </div>
-          </div>
-        </div>
-
-        <div class="sidebar-box" style="margin-top: 16px;">
-          <h4 style="font-size: 14px; margin-bottom: 8px;">快捷操作</h4>
-          <div style="display: flex; gap: 8px; flex-direction: column;">
-            <button onclick="toggleFullScreen(event)" class="btn-primary" style="width: 100%; text-align: center;">⛶ 全螢幕播放</button>
-            <button onclick="copyShareLink()" class="btn-secondary" style="width: 100%; text-align: center;">🔗 複製本片播放連結</button>
-            <a href="index.html" class="btn-outline" style="width: 100%; text-align: center;">🏠 返回視頻首頁</a>
           </div>
         </div>
       </div>
@@ -283,6 +295,7 @@
       // Initial page entry: load episode and prepare player at the exact watched position
       playEpisode(targetSrc, targetEp, resumeTime, false);
       setupPlayerEvents();
+      initVideoBrightness();
 
       // Ensure video player is positioned at the top of the screen on page entry
       scrollVideoToTop(false);
@@ -841,6 +854,84 @@
       showTvToast(`${icon}：${pct}%`);
     }
 
+    // Video Brightness Control Engine
+    let currentBrightness = 100;
+    const BRIGHTNESS_STORAGE_KEY = 'ikan_video_brightness';
+
+    function initVideoBrightness() {
+      try {
+        const saved = localStorage.getItem(BRIGHTNESS_STORAGE_KEY);
+        if (saved && !isNaN(parseInt(saved, 10))) {
+          const val = parseInt(saved, 10);
+          setBrightness(val, false);
+          return;
+        }
+      } catch (e) {}
+      setBrightness(100, false);
+    }
+
+    function setBrightness(percent, showToast = true) {
+      percent = Math.max(60, Math.min(240, Math.round(percent)));
+      currentBrightness = percent;
+      try {
+        localStorage.setItem(BRIGHTNESS_STORAGE_KEY, String(percent));
+      } catch (e) {}
+
+      // Apply CSS filter to video element
+      // Slightly boost contrast as brightness goes up to prevent washed-out look
+      let contrast = 1.0;
+      if (percent > 100) {
+        contrast = 1.0 + ((percent - 100) / 100) * 0.12;
+      }
+
+      if (videoEl) {
+        if (percent === 100) {
+          videoEl.style.filter = '';
+        } else {
+          videoEl.style.filter = `brightness(${percent / 100}) contrast(${contrast.toFixed(3)})`;
+        }
+      }
+
+      // Update UI displays
+      const valText = document.getElementById('brightnessValueText');
+      if (valText) valText.textContent = `${percent}%`;
+
+      const floatText = document.getElementById('floatBrightnessText');
+      if (floatText) floatText.textContent = `亮度 ${percent}%`;
+
+      document.querySelectorAll('.brightness-btn-preset').forEach(btn => {
+        const b = parseInt(btn.getAttribute('data-b'), 10);
+        if (b === percent) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      if (showToast) {
+        const mode = percent === 100 ? '標準' : (percent <= 130 ? '微亮' : (percent <= 160 ? '高亮' : '超亮'));
+        showTvToast(`🔆 畫面亮度：${percent}% (${mode})`);
+      }
+    }
+
+    function adjustBrightness(delta) {
+      setBrightness(currentBrightness + delta, true);
+    }
+
+    const BRIGHTNESS_CYCLE_PRESETS = [100, 125, 150, 180];
+    function cycleBrightness(e) {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      let nextIdx = 0;
+      const idx = BRIGHTNESS_CYCLE_PRESETS.indexOf(currentBrightness);
+      if (idx !== -1) {
+        nextIdx = (idx + 1) % BRIGHTNESS_CYCLE_PRESETS.length;
+      } else {
+        const found = BRIGHTNESS_CYCLE_PRESETS.find(b => b > currentBrightness);
+        nextIdx = found ? BRIGHTNESS_CYCLE_PRESETS.indexOf(found) : 0;
+      }
+      setBrightness(BRIGHTNESS_CYCLE_PRESETS[nextIdx], true);
+    }
+
     // Fullscreen Enter / Exit Helpers
     function enterFullScreen() {
       const player = document.getElementById('playerWrapper') || videoEl;
@@ -925,6 +1016,12 @@
       const key = e ? e.key : '';
       if (key === 'f' || key === 'F' || code === 70 || code === 82 || key === 'ContextMenu') {
         toggleFullScreen();
+        return true;
+      }
+
+      // Shortcut key 'B' / 'b' (code 66 / 98) to adjust/cycle brightness
+      if (key === 'b' || key === 'B' || code === 66 && !isEnter) {
+        cycleBrightness();
         return true;
       }
 
