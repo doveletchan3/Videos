@@ -9,7 +9,7 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="img/logo-192.png">
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261013_3">
   <!-- Hls.js for smooth .m3u8 streaming across all browsers -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
 </head>
@@ -49,7 +49,7 @@
 
     <!-- Video Player Container (16:9) -->
     <div class="player-wrapper" id="playerWrapper" tabindex="0" title="遙控器按 OK 鍵播放/暫停，左右鍵快進/快退 10 秒，雙擊 OK 或按菜單鍵全螢幕">
-      <video id="mainVideoPlayer" controls playsinline preload="metadata"></video>
+      <video id="mainVideoPlayer" controls playsinline webkit-playsinline x5-playsinline preload="metadata"></video>
       <div id="tvSeekToast" class="tv-player-toast"></div>
       <div class="player-top-floating-bar">
         <button id="playerFloatBrightnessBtn" onclick="cycleBrightness(event)" class="player-float-btn" title="循環調整畫面亮度 (遙控器按 B 鍵切換)" tabindex="0" role="button">
@@ -112,6 +112,7 @@
               <button type="button" onclick="setBrightness(125)" class="brightness-btn-preset" data-b="125" tabindex="0">微亮</button>
               <button type="button" onclick="setBrightness(150)" class="brightness-btn-preset" data-b="150" tabindex="0">高亮</button>
               <button type="button" onclick="setBrightness(180)" class="brightness-btn-preset" data-b="180" tabindex="0">超亮</button>
+              <button type="button" onclick="setBrightness(200)" class="brightness-btn-preset" data-b="200" tabindex="0">極亮 200%</button>
             </div>
           </div>
         </div>
@@ -871,24 +872,27 @@
     }
 
     function setBrightness(percent, showToast = true) {
-      percent = Math.max(60, Math.min(240, Math.round(percent)));
+      percent = Math.max(60, Math.min(250, Math.round(percent)));
       currentBrightness = percent;
       try {
         localStorage.setItem(BRIGHTNESS_STORAGE_KEY, String(percent));
       } catch (e) {}
 
-      // Apply CSS filter to video element
+      // Apply CSS filter to video element (with webkitFilter for iOS Safari / iPadOS compatibility)
       // Slightly boost contrast as brightness goes up to prevent washed-out look
       let contrast = 1.0;
       if (percent > 100) {
-        contrast = 1.0 + ((percent - 100) / 100) * 0.12;
+        contrast = 1.0 + ((percent - 100) / 100) * 0.14;
       }
 
       if (videoEl) {
         if (percent === 100) {
           videoEl.style.filter = '';
+          videoEl.style.webkitFilter = '';
         } else {
-          videoEl.style.filter = `brightness(${percent / 100}) contrast(${contrast.toFixed(3)})`;
+          const filterStr = `brightness(${percent / 100}) contrast(${contrast.toFixed(3)})`;
+          videoEl.style.filter = filterStr;
+          videoEl.style.webkitFilter = filterStr;
         }
       }
 
@@ -909,7 +913,12 @@
       });
 
       if (showToast) {
-        const mode = percent === 100 ? '標準' : (percent <= 130 ? '微亮' : (percent <= 160 ? '高亮' : '超亮'));
+        let mode = '標準';
+        if (percent === 125) mode = '微亮';
+        else if (percent === 150) mode = '高亮';
+        else if (percent === 180) mode = '超亮';
+        else if (percent >= 200) mode = '極亮';
+        else if (percent > 100) mode = '增亮';
         showTvToast(`🔆 畫面亮度：${percent}% (${mode})`);
       }
     }
@@ -918,7 +927,7 @@
       setBrightness(currentBrightness + delta, true);
     }
 
-    const BRIGHTNESS_CYCLE_PRESETS = [100, 125, 150, 180];
+    const BRIGHTNESS_CYCLE_PRESETS = [100, 125, 150, 180, 200];
     function cycleBrightness(e) {
       if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
       let nextIdx = 0;

@@ -1,5 +1,5 @@
 // Videos App - Service Worker for PWA & Android TV
-const CACHE_NAME = 'videos-cache-v2';
+const CACHE_NAME = 'videos-cache-v3';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
