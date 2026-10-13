@@ -86,8 +86,9 @@
         </p>
 
         <!-- Current Playing Status Badge -->
-        <div id="currentPlayStatus" style="margin-bottom: 14px; font-size: 13px; color: #555; background: #f0f7ff; padding: 6px 12px; border-radius: 4px; display: inline-block;">
-          <span id="playStatusPrefix">當前已選分集：</span><strong id="playingEpLabel" style="color: var(--primary-color);">-</strong>
+        <div id="currentPlayStatus" style="margin-bottom: 14px; font-size: 13px; color: #555; background: #f0f7ff; padding: 6px 12px; border-radius: 4px; display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div><span id="playStatusPrefix">當前已選分集：</span><strong id="playingEpLabel" style="color: var(--primary-color);">-</strong></div>
+          <span id="historyResumeBadge" style="display: none; background: #ecfdf5; color: #059669; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid #a7f3d0; font-size: 12px;"></span>
         </div>
 
         <!-- Sources and Episode Buttons Container -->
@@ -204,21 +205,77 @@
       renderSourcesAndEpisodes();
 
       // Check if user specified ep or source in query or history
-      const paramSource = parseInt(getUrlParam('src') || '0', 10);
-      const paramEp = parseInt(getUrlParam('ep') || '0', 10);
       const historyItem = WatchHistory.get(currentVideo.id);
+      const paramSource = getUrlParam('src');
+      const paramEp = getUrlParam('ep');
+      const paramTime = parseFloat(getUrlParam('t') || '0');
 
-      let targetSrc = isNaN(paramSource) ? 0 : paramSource;
-      let targetEp = isNaN(paramEp) ? 0 : paramEp;
+      let targetSrc = 0;
+      let targetEp = 0;
       let resumeTime = 0;
 
-      if (!getUrlParam('ep') && historyItem) {
-        targetSrc = historyItem.sourceIndex || 0;
-        targetEp = historyItem.epIndex || 0;
-        resumeTime = historyItem.currentTime || 0;
+      if (historyItem) {
+        // 1. Resolve source index from history
+        let foundSrcIdx = -1;
+        if (typeof historyItem.sourceIndex === 'number' && currentVideo.sources[historyItem.sourceIndex]) {
+          foundSrcIdx = historyItem.sourceIndex;
+        }
+        if (foundSrcIdx === -1 && historyItem.sourceName) {
+          foundSrcIdx = currentVideo.sources.findIndex(s => {
+            return s.name === historyItem.sourceName ||
+                   (s.name && historyItem.sourceName.includes(s.name)) ||
+                   (historyItem.sourceRealIndex && s.source_index === historyItem.sourceRealIndex);
+          });
+        }
+        if (foundSrcIdx === -1 && typeof historyItem.sourceRealIndex === 'number') {
+          foundSrcIdx = currentVideo.sources.findIndex(s => s.source_index === historyItem.sourceRealIndex);
+        }
+        if (foundSrcIdx !== -1) {
+          targetSrc = foundSrcIdx;
+        }
+
+        // 2. Resolve episode index
+        if (typeof historyItem.epIndex === 'number') {
+          targetEp = historyItem.epIndex;
+        }
+
+        // 3. Resolve resume time
+        if (typeof historyItem.currentTime === 'number' && historyItem.currentTime > 5) {
+          resumeTime = historyItem.currentTime;
+        }
       }
 
-      // Initial page entry: load episode and prepare player, but DO NOT autoplay video!
+      // Explicit URL query params take precedence if present
+      if (paramSource !== null && !isNaN(parseInt(paramSource, 10))) {
+        const pSrc = parseInt(paramSource, 10);
+        if (currentVideo.sources[pSrc]) targetSrc = pSrc;
+      }
+      if (paramEp !== null && !isNaN(parseInt(paramEp, 10))) {
+        targetEp = parseInt(paramEp, 10);
+      }
+      if (paramTime > 5) {
+        resumeTime = paramTime;
+      }
+
+      // Update UI hints if resuming from previous history
+      const historyBadge = document.getElementById('historyResumeBadge');
+      const centerText = document.querySelector('.center-play-text');
+      if (resumeTime > 5) {
+        const timeStr = formatTime(resumeTime);
+        const durStr = (historyItem && historyItem.duration > 0) ? ` / ${formatTime(historyItem.duration)}` : '';
+        if (historyBadge) {
+          historyBadge.style.display = 'inline-block';
+          historyBadge.textContent = `📍 已定位至上次觀看進度：${timeStr}${durStr}`;
+        }
+        if (centerText) {
+          centerText.innerHTML = `繼續播放<div style="font-size: 12px; margin-top: 4px; opacity: 0.9; font-weight: normal;">上次進度：${timeStr}${durStr}</div>`;
+        }
+      } else {
+        if (historyBadge) historyBadge.style.display = 'none';
+        if (centerText) centerText.textContent = '點擊播放';
+      }
+
+      // Initial page entry: load episode and prepare player at the exact watched position
       playEpisode(targetSrc, targetEp, resumeTime, false);
       setupPlayerEvents();
 
@@ -444,6 +501,9 @@
       if (retestBtn) retestBtn.textContent = '⚡ 重新測速';
     }
 
+    let pendingResumeTime = 0;
+    let hasAppliedResume = false;
+
     function playEpisode(sIdx, eIdx, resumeTime = 0, autoPlay = true) {
       if (!currentVideo.sources || !currentVideo.sources[sIdx]) return;
       const source = currentVideo.sources[sIdx];
@@ -451,6 +511,8 @@
 
       currentSourceIdx = sIdx;
       currentEpIdx = eIdx;
+      pendingResumeTime = resumeTime;
+      hasAppliedResume = false;
       const ep = source.episodes[eIdx];
 
       // Update UI active buttons
@@ -492,6 +554,14 @@
       const prefixEl = document.getElementById('playStatusPrefix');
       if (prefixEl) prefixEl.textContent = '當前正在播放：';
       scrollVideoToTop(true);
+
+      if (pendingResumeTime > 5) {
+        try {
+          videoEl.currentTime = pendingResumeTime;
+        } catch (e) {}
+        showTvToast(`⏱️ 繼續播放：${formatTime(pendingResumeTime)}`);
+      }
+
       videoEl.play().catch((err) => {
         console.warn('Play error:', err);
       });
@@ -515,7 +585,8 @@
           enableWorker: true,
           lowLatencyMode: false,
           manifestLoadingTimeOut: 12000,
-          manifestLoadingMaxRetry: 3
+          manifestLoadingMaxRetry: 3,
+          startPosition: resumeTime > 5 ? resumeTime : -1
         });
         hls.loadSource(streamUrl);
         hls.attachMedia(videoEl);
@@ -523,7 +594,10 @@
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           loadingOverlay.style.display = 'none';
           if (resumeTime > 5) {
-            videoEl.currentTime = resumeTime;
+            try {
+              videoEl.currentTime = resumeTime;
+            } catch (e) {}
+            showTvToast(`⏱️ 已跳轉至上次進度：${formatTime(resumeTime)}`);
           }
           if (autoPlay) {
             videoEl.play().catch(() => {});
@@ -554,7 +628,10 @@
         videoEl.addEventListener('loadedmetadata', () => {
           loadingOverlay.style.display = 'none';
           if (resumeTime > 5) {
-            videoEl.currentTime = resumeTime;
+            try {
+              videoEl.currentTime = resumeTime;
+            } catch (e) {}
+            showTvToast(`⏱️ 已跳轉至上次進度：${formatTime(resumeTime)}`);
           }
           if (autoPlay) {
             videoEl.play().catch(() => {});
@@ -564,13 +641,18 @@
         // MP4 / regular video
         videoEl.src = streamUrl;
         videoEl.load();
-        loadingOverlay.style.display = 'none';
-        if (resumeTime > 5) {
-          videoEl.currentTime = resumeTime;
-        }
-        if (autoPlay) {
-          videoEl.play().catch(() => {});
-        }
+        videoEl.addEventListener('loadedmetadata', () => {
+          loadingOverlay.style.display = 'none';
+          if (resumeTime > 5) {
+            try {
+              videoEl.currentTime = resumeTime;
+            } catch (e) {}
+            showTvToast(`⏱️ 已跳轉至上次進度：${formatTime(resumeTime)}`);
+          }
+          if (autoPlay) {
+            videoEl.play().catch(() => {});
+          }
+        }, { once: true });
       }
     }
 
@@ -595,11 +677,11 @@
     }
 
     function setupPlayerEvents() {
-      // Auto save watch progress every 5s
+      // Auto save watch progress every 5s (only after past 3s to avoid overwriting on init)
       let lastSave = 0;
       videoEl.addEventListener('timeupdate', () => {
         const now = Date.now();
-        if (now - lastSave > 4000 && videoEl.currentTime > 0) {
+        if (now - lastSave > 4000 && videoEl.currentTime > 3) {
           lastSave = now;
           const src = currentVideo.sources[currentSourceIdx];
           const ep = src && src.episodes ? src.episodes[currentEpIdx] : null;
@@ -639,6 +721,15 @@
 
       videoEl.addEventListener('playing', () => {
         loadingOverlay.style.display = 'none';
+        if (pendingResumeTime > 5 && !hasAppliedResume) {
+          hasAppliedResume = true;
+          if (Math.abs(videoEl.currentTime - pendingResumeTime) > 3) {
+            try {
+              videoEl.currentTime = pendingResumeTime;
+            } catch (e) {}
+          }
+          showTvToast(`⏱️ 繼續播放：${formatTime(pendingResumeTime)}`);
+        }
       });
 
       videoEl.addEventListener('waiting', () => {

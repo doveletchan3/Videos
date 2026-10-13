@@ -260,7 +260,15 @@
       filtered.forEach(video => {
         const card = document.createElement('a');
         card.className = 'video-card';
-        card.href = `play.html?id=${encodeURIComponent(video.id)}`;
+
+        const hist = WatchHistory.get(video.id);
+        let href = `play.html?id=${encodeURIComponent(video.id)}`;
+        let historyBadge = '';
+        if (hist && hist.currentTime > 5) {
+          href += `&src=${hist.sourceIndex}&ep=${hist.epIndex}&t=${hist.currentTime}`;
+          historyBadge = `<span class="poster-history-badge">看到 ${formatTime(hist.currentTime)}</span>`;
+        }
+        card.href = href;
 
         let epBadge = '';
         if (video.sources && video.sources.length > 0) {
@@ -276,7 +284,7 @@
           <div class="poster-wrap">
             <img src="${posterUrl}" alt="${video.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='${APP_CONFIG.DEFAULT_FALLBACK_POSTER}'">
             ${yearBadge}
-            ${epBadge ? `<span class="poster-badge">${epBadge}</span>` : ''}
+            ${historyBadge ? historyBadge : (epBadge ? `<span class="poster-badge">${epBadge}</span>` : '')}
           </div>
           <div class="video-card-title" title="${video.title}">${video.title}</div>
         `;
