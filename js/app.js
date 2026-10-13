@@ -82,7 +82,9 @@ const WatchHistory = {
       poster: video.poster,
       category: video.category || '劇集',
       sourceIndex: sourceIndex || 0,
-      sourceName: video.sources && video.sources[sourceIndex] ? video.sources[sourceIndex].name : '線路1',
+      sourceName: video.sources && video.sources[sourceIndex] ? (
+        video.sources[sourceIndex].lang ? `${video.sources[sourceIndex].name} (${video.sources[sourceIndex].lang})` : video.sources[sourceIndex].name
+      ) : '線路1',
       epIndex: epIndex || 0,
       epName: epName || '第1集',
       currentTime: Math.floor(currentTime),

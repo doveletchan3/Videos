@@ -75,6 +75,9 @@
         <div class="line-info-bar">
           <span class="line-info-title">線路選擇</span>
           <span id="lineCountStat" class="line-info-count"></span>
+          <button id="retestAllBtn" onclick="testAllSourcesSpeed()" class="btn-secondary" style="padding: 2px 10px; font-size: 12px; margin-left: 10px; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
+            ⚡ 重新測速
+          </button>
         </div>
         
         <p class="line-disclaimer">
@@ -262,6 +265,16 @@
       document.getElementById('detailActors').textContent = d.actors || '其他';
     }
 
+    function getVideoDefaultLang(video) {
+      const reg = (video && video.details && video.details.region) || '';
+      const sub = (video && video.subcategory) || '';
+      if (reg.includes('港') || sub === '港劇') return '粵語';
+      if (reg.includes('日') || sub === '日劇' || sub === '日本動畫') return '日語';
+      if (reg.includes('韓') || sub === '韓劇') return '韓語';
+      if (reg.includes('美') || reg.includes('英') || sub === '美劇' || sub === '英劇') return 'English';
+      return '普通話';
+    }
+
     function renderSourcesAndEpisodes() {
       const container = document.getElementById('sourcesContainer');
       container.innerHTML = '';
@@ -278,10 +291,18 @@
 
         const header = document.createElement('div');
         header.className = 'source-header';
+
+        const lineName = source.name || ('線路' + (sIdx + 1));
+        const defaultLang = getVideoDefaultLang(currentVideo);
+        const langVal = source.lang || defaultLang;
+        const epCount = source.episodes ? source.episodes.length : 0;
+
         header.innerHTML = `
           <div class="source-title">
-            <span>${source.name || ('線路' + (sIdx + 1))}</span>
-            <span class="source-tag">${source.episodes ? source.episodes.length : 0} 集</span>
+            <span>${lineName} (${langVal}) (${epCount} 集)</span>
+            <span id="speed-badge-${sIdx}" class="speed-badge testing" title="點擊重新測速" onclick="testSingleSourceSpeed(${sIdx})">
+              <span class="speed-dot"></span><span class="speed-val">測速中...</span>
+            </span>
           </div>
         `;
         sec.appendChild(header);
@@ -306,6 +327,110 @@
         sec.appendChild(epGrid);
         container.appendChild(sec);
       });
+
+      // Automatically test network latency for all sources
+      testAllSourcesSpeed();
+    }
+
+    async function measureStreamLatency(url) {
+      if (!url) return { success: false };
+
+      // 1. If running locally with server.py, /api/test-line provides immediate server-side check
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        try {
+          const apiRes = await fetch('/api/test-line', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+          });
+          if (apiRes.ok) {
+            const data = await apiRes.json();
+            if (data.success && typeof data.latency === 'number') {
+              return { success: true, latency: data.latency };
+            }
+          }
+        } catch (apiErr) {
+          // Fall through to client-side test
+        }
+      }
+
+      // 2. Client-side latency test (directly tests user's connection to the video CDN)
+      const t0 = performance.now();
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 4000);
+        const resp = await fetch(url, {
+          method: 'GET',
+          mode: 'cors',
+          cache: 'no-cache',
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+        const latency = Math.max(1, Math.round(performance.now() - t0));
+        if (resp.ok || resp.type === 'opaque') {
+          return { success: true, latency };
+        }
+      } catch (clientErr) {
+        // Fallback with no-cors HEAD/GET probe
+        try {
+          const t1 = performance.now();
+          const controller2 = new AbortController();
+          const timer2 = setTimeout(() => controller2.abort(), 3500);
+          await fetch(url, {
+            method: 'HEAD',
+            mode: 'no-cors',
+            cache: 'no-cache',
+            signal: controller2.signal
+          });
+          clearTimeout(timer2);
+          const latency = Math.max(1, Math.round(performance.now() - t1));
+          return { success: true, latency };
+        } catch (e2) {}
+      }
+      return { success: false };
+    }
+
+    async function testSingleSourceSpeed(sIdx) {
+      if (!currentVideo || !currentVideo.sources || !currentVideo.sources[sIdx]) return;
+      const source = currentVideo.sources[sIdx];
+      const badge = document.getElementById(`speed-badge-${sIdx}`);
+      if (!badge) return;
+
+      const ep0 = source.episodes && source.episodes[0] ? source.episodes[0].url : '';
+      if (!ep0) {
+        badge.className = 'speed-badge error';
+        badge.innerHTML = '<span class="speed-dot"></span><span class="speed-val">無分集</span>';
+        return;
+      }
+
+      badge.className = 'speed-badge testing';
+      badge.innerHTML = '<span class="speed-dot"></span><span class="speed-val">測速中...</span>';
+
+      const res = await measureStreamLatency(ep0);
+      if (res.success) {
+        const ms = res.latency;
+        let speedClass = 'fast';
+        if (ms > 900) {
+          speedClass = 'slow';
+        } else if (ms > 450) {
+          speedClass = 'medium';
+        }
+        badge.className = `speed-badge ${speedClass}`;
+        badge.innerHTML = `<span class="speed-dot"></span><span class="speed-val">${ms}ms</span>`;
+      } else {
+        badge.className = 'speed-badge error';
+        badge.innerHTML = '<span class="speed-dot"></span><span class="speed-val">超時</span>';
+      }
+    }
+
+    async function testAllSourcesSpeed() {
+      if (!currentVideo || !currentVideo.sources) return;
+      const retestBtn = document.getElementById('retestAllBtn');
+      if (retestBtn) retestBtn.textContent = '⏳ 測速中...';
+
+      await Promise.all(currentVideo.sources.map((_, idx) => testSingleSourceSpeed(idx)));
+
+      if (retestBtn) retestBtn.textContent = '⚡ 重新測速';
     }
 
     function playEpisode(sIdx, eIdx, resumeTime = 0, autoPlay = true) {
@@ -324,7 +449,10 @@
         activeBtn.classList.add('active');
       }
 
-      const epLabel = `${source.name || ('線路' + (sIdx + 1))} - ${ep.name}`;
+      const lineName = source.name || ('線路' + (sIdx + 1));
+      const defaultLang = getVideoDefaultLang(currentVideo);
+      const langVal = source.lang || defaultLang;
+      const epLabel = `${lineName} (${langVal}) - ${ep.name}`;
       document.getElementById('playingEpLabel').textContent = epLabel;
 
       const centerOverlay = document.getElementById('centerPlayOverlay');

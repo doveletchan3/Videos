@@ -670,6 +670,74 @@ a:hover {
   font-weight: normal;
 }
 
+.speed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  line-height: 1.3;
+}
+.speed-badge.testing {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
+.speed-badge.fast {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+.speed-badge.medium {
+  background: #fefce8;
+  color: #ca8a04;
+  border: 1px solid #fde047;
+}
+.speed-badge.slow {
+  background: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #fed7aa;
+}
+.speed-badge.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.speed-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.speed-badge.testing .speed-dot {
+  background: #94a3b8;
+  animation: pulse-dot 1s infinite alternate;
+}
+.speed-badge.fast .speed-dot {
+  background: #10b981;
+}
+.speed-badge.medium .speed-dot {
+  background: #eab308;
+}
+.speed-badge.slow .speed-dot {
+  background: #f97316;
+}
+.speed-badge.error .speed-dot {
+  background: #ef4444;
+}
+
+@keyframes pulse-dot {
+  from { opacity: 0.3; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1.15); }
+}
+
+
 .episode-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
