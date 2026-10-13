@@ -292,6 +292,16 @@ const TvSpatialNav = {
   }
 };
 
+// Android TV / TV Box Environment Detector
+function isTvEnvironment() {
+  if (window.__isUsingTvRemote === true) return true;
+  const ua = (navigator.userAgent || '').toLowerCase();
+  if (ua.includes('android') && !ua.includes('mobile')) return true;
+  if (/tv|box|aftt|aftm|bravia|smarttv|googletv|appletv|crkey|tizen|web0s/i.test(ua)) return true;
+  return false;
+}
+window.isTvEnvironment = isTvEnvironment;
+
 // Android TV / TV Box Remote Control D-pad support
 function initTvRemoteNavigation() {
   document.addEventListener('focusout', (e) => {
@@ -316,6 +326,10 @@ function initTvRemoteNavigation() {
     const isMediaPlayPause = key === 'MediaPlayPause' || code === 179 || code === 85 || code === 126 || code === 127;
     const isMediaFastForward = key === 'MediaFastForward' || code === 228 || code === 90;
     const isMediaRewind = key === 'MediaRewind' || code === 227 || code === 89;
+
+    if (isUp || isDown || isLeft || isRight || isEnter || isBack || isMediaPlayPause || isMediaFastForward || isMediaRewind) {
+      window.__isUsingTvRemote = true;
+    }
 
     const activeEl = document.activeElement;
     const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');

@@ -382,7 +382,22 @@
             btn.title = ep.name;
             btn.setAttribute('tabindex', '0');
             btn.setAttribute('role', 'button');
-            btn.onclick = () => playEpisode(sIdx, eIdx, 0, true);
+            btn.onclick = () => {
+              const isCurrent = (sIdx === currentSourceIdx && eIdx === currentEpIdx);
+              let targetResume = 0;
+              if (isCurrent) {
+                if (videoEl && videoEl.currentTime > 5) {
+                  targetResume = videoEl.currentTime;
+                } else if (pendingResumeTime > 5) {
+                  targetResume = pendingResumeTime;
+                }
+              }
+              playEpisode(sIdx, eIdx, targetResume, true);
+              const playerWrap = document.getElementById('playerWrapper');
+              if (playerWrap && typeof TvSpatialNav !== 'undefined') {
+                TvSpatialNav.focusElement(playerWrap);
+              }
+            };
             epGrid.appendChild(btn);
           });
         } else {
@@ -396,11 +411,13 @@
       // Automatically test network latency for all sources
       testAllSourcesSpeed();
 
-      // Auto-focus active episode button on TV Box for instant remote readiness
+      // Auto-focus center play button or player wrapper for instant remote readiness (NOT the episode button!)
       setTimeout(() => {
-        const activeEp = document.querySelector('.episode-btn.active') || document.querySelector('.episode-btn');
-        if (activeEp && typeof TvSpatialNav !== 'undefined') {
-          TvSpatialNav.focusElement(activeEp);
+        const centerBtn = document.getElementById('centerPlayOverlay');
+        const playerWrap = document.getElementById('playerWrapper');
+        const target = (centerBtn && centerBtn.style.display !== 'none') ? centerBtn : playerWrap;
+        if (target && typeof TvSpatialNav !== 'undefined') {
+          TvSpatialNav.focusElement(target);
         }
       }, 180);
     }
@@ -560,15 +577,26 @@
       if (prefixEl) prefixEl.textContent = '當前正在播放：';
       scrollVideoToTop(true);
 
-      if (pendingResumeTime > 5) {
+      const toResume = pendingResumeTime;
+      pendingResumeTime = 0; // Clear immediately so subsequent unpauses never jump back!
+      hasAppliedResume = true;
+
+      if (toResume > 5) {
         try {
-          videoEl.currentTime = pendingResumeTime;
+          videoEl.currentTime = toResume;
         } catch (e) {}
-        showTvToast(`⏱️ 繼續播放：${formatTime(pendingResumeTime)}`);
+        showTvToast(`⏱️ 繼續播放：${formatTime(toResume)}`);
       }
 
-      // Automatically enter full screen when starting playback on TV Box
-      toggleFullScreen();
+      // Enter full screen only on Android TV / TV Remote environment, never force on Windows desktop!
+      if (typeof isTvEnvironment === 'function' && isTvEnvironment()) {
+        enterFullScreen();
+      }
+
+      const playerWrap = document.getElementById('playerWrapper');
+      if (playerWrap && typeof TvSpatialNav !== 'undefined') {
+        TvSpatialNav.focusElement(playerWrap);
+      }
 
       videoEl.play().catch((err) => {
         console.warn('Play error:', err);
@@ -704,6 +732,12 @@
         }
       });
 
+      // User manually seeked/scrubbed video timeline -> invalidate initial pending resume time
+      videoEl.addEventListener('seeking', () => {
+        pendingResumeTime = 0;
+        hasAppliedResume = true;
+      });
+
       // Auto play next episode on end
       videoEl.addEventListener('ended', () => {
         const src = currentVideo.sources[currentSourceIdx];
@@ -723,7 +757,13 @@
       videoEl.addEventListener('pause', () => {
         if (videoEl.currentTime < videoEl.duration && loadingOverlay.style.display !== 'flex') {
           const centerOverlay = document.getElementById('centerPlayOverlay');
-          if (centerOverlay) centerOverlay.style.display = 'flex';
+          if (centerOverlay) {
+            centerOverlay.style.display = 'flex';
+            const centerText = document.querySelector('.center-play-text');
+            if (centerText) {
+              centerText.innerHTML = `暫停中<div style="font-size: 12px; margin-top: 4px; opacity: 0.9; font-weight: normal;">點擊繼續播放 (${formatTime(videoEl.currentTime)})</div>`;
+            }
+          }
         }
       });
 
@@ -731,12 +771,14 @@
         loadingOverlay.style.display = 'none';
         if (pendingResumeTime > 5 && !hasAppliedResume) {
           hasAppliedResume = true;
-          if (Math.abs(videoEl.currentTime - pendingResumeTime) > 3) {
+          const target = pendingResumeTime;
+          pendingResumeTime = 0;
+          if (Math.abs(videoEl.currentTime - target) > 3) {
             try {
-              videoEl.currentTime = pendingResumeTime;
+              videoEl.currentTime = target;
             } catch (e) {}
           }
-          showTvToast(`⏱️ 繼續播放：${formatTime(pendingResumeTime)}`);
+          showTvToast(`⏱️ 繼續播放：${formatTime(target)}`);
         }
       });
 
@@ -789,13 +831,21 @@
       showTvToast(`${icon} ${Math.abs(sec)}秒 &nbsp;(${formatTime(targetTime)} / ${formatTime(videoEl.duration)})`);
     }
 
-    // Fullscreen Toggle Helper
-    function toggleFullScreen(e) {
-      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+    function adjustVolume(delta) {
+      if (!videoEl) return;
+      let newVol = Math.max(0, Math.min(1, Math.round((videoEl.volume + delta) * 10) / 10));
+      videoEl.volume = newVol;
+      videoEl.muted = false;
+      const pct = Math.round(newVol * 100);
+      const icon = pct === 0 ? '🔇 靜音' : (pct < 50 ? '🔉 音量' : '🔊 音量');
+      showTvToast(`${icon}：${pct}%`);
+    }
+
+    // Fullscreen Enter / Exit Helpers
+    function enterFullScreen() {
       const player = document.getElementById('playerWrapper') || videoEl;
       const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-
-      if (!isFs) {
+      if (!isFs && player) {
         const req = player.requestFullscreen || player.webkitRequestFullscreen || player.mozRequestFullScreen || player.msRequestFullscreen;
         if (req) {
           req.call(player).catch(() => {
@@ -807,6 +857,16 @@
         }
         showTvToast('⛶ 進入全螢幕');
         updateFsButtonState(true);
+      }
+    }
+
+    function toggleFullScreen(e) {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      const player = document.getElementById('playerWrapper') || videoEl;
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+
+      if (!isFs) {
+        enterFullScreen();
       } else {
         const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
         if (exit) {
@@ -853,7 +913,11 @@
       e
     }) {
       const playerWrapper = document.getElementById('playerWrapper');
+      const centerOverlay = document.getElementById('centerPlayOverlay');
+      const isCenterVisible = centerOverlay && centerOverlay.style.display !== 'none';
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
       const isFocusedOnPlayer = (document.activeElement === playerWrapper || document.activeElement === videoEl);
+      const isFocusedOnCenter = (document.activeElement === centerOverlay);
       const isFocusedOnEpBtn = document.activeElement && document.activeElement.classList.contains('episode-btn');
 
       // Remote shortcut keys for Fullscreen: F key (70) or Menu key (82) or ContextMenu
@@ -878,12 +942,19 @@
         return true;
       }
 
-      // If user is focused on player wrapper
-      if (isFocusedOnPlayer) {
+      // ==========================================
+      // Scenario 1: Video is in Full Screen Mode
+      // (100% of TV D-pad keys are dedicated to playback)
+      // ==========================================
+      if (isFs) {
+        if (isBack) {
+          toggleFullScreen();
+          return true;
+        }
         if (isEnter) {
           const now = Date.now();
           if (now - lastOkPressTime < 450) {
-            // Double-click OK: Toggle Fullscreen!
+            // Double-click OK: Toggle Fullscreen
             lastOkPressTime = 0;
             toggleFullScreen();
             return true;
@@ -900,8 +971,26 @@
           seekRelative(10);
           return true;
         }
+        if (isUp) {
+          adjustVolume(0.1);
+          return true;
+        }
         if (isDown) {
-          // Move focus down to episode list
+          adjustVolume(-0.1);
+          return true;
+        }
+        return true; // Absorb any other keys in fullscreen
+      }
+
+      // ==========================================
+      // Scenario 2: Center Play Overlay is Focused
+      // ==========================================
+      if (isFocusedOnCenter) {
+        if (isEnter) {
+          startPlaybackFromCenterBtn();
+          return true;
+        }
+        if (isDown) {
           const activeEp = document.querySelector('.episode-btn.active') || document.querySelector('.episode-btn');
           if (activeEp && typeof TvSpatialNav !== 'undefined') {
             TvSpatialNav.focusElement(activeEp);
@@ -910,15 +999,94 @@
         }
       }
 
-      // If focused on top row of episode buttons, pressing Up moves focus back to player
+      // ==========================================
+      // Scenario 3: Player Wrapper is Focused
+      // ==========================================
+      if (isFocusedOnPlayer) {
+        if (isEnter) {
+          if (isCenterVisible) {
+            startPlaybackFromCenterBtn();
+            return true;
+          }
+          const now = Date.now();
+          if (now - lastOkPressTime < 450) {
+            // Double-click OK: Enter Fullscreen!
+            lastOkPressTime = 0;
+            toggleFullScreen();
+            return true;
+          }
+          lastOkPressTime = now;
+          togglePlayPause();
+          return true;
+        }
+        if (isLeft) {
+          seekRelative(-10);
+          return true;
+        }
+        if (isRight) {
+          seekRelative(10);
+          return true;
+        }
+        if (isUp) {
+          adjustVolume(0.1);
+          return true;
+        }
+        if (isDown) {
+          // Move focus down into episode list
+          const activeEp = document.querySelector('.episode-btn.active') || document.querySelector('.episode-btn');
+          if (activeEp && typeof TvSpatialNav !== 'undefined') {
+            TvSpatialNav.focusElement(activeEp);
+            return true;
+          }
+        }
+      }
+
+      // ==========================================
+      // Scenario 4: Video is actively playing, user presses Left/Right/OK
+      // (Focus might be on body or generic element, avoid jumping to EP 02!)
+      // ==========================================
+      const isVideoPlaying = videoEl && !videoEl.paused;
+      if (isVideoPlaying && !isFocusedOnEpBtn) {
+        const activeTag = document.activeElement ? document.activeElement.tagName : '';
+        if (activeTag !== 'INPUT' && activeTag !== 'BUTTON') {
+          if (isLeft) {
+            seekRelative(-10);
+            return true;
+          }
+          if (isRight) {
+            seekRelative(10);
+            return true;
+          }
+          if (isEnter) {
+            togglePlayPause();
+            return true;
+          }
+          if (isUp) {
+            adjustVolume(0.1);
+            return true;
+          }
+          if (isDown) {
+            const activeEp = document.querySelector('.episode-btn.active') || document.querySelector('.episode-btn');
+            if (activeEp && typeof TvSpatialNav !== 'undefined') {
+              TvSpatialNav.focusElement(activeEp);
+              return true;
+            }
+          }
+        }
+      }
+
+      // ==========================================
+      // Scenario 5: User is focused on Episode Grid
+      // ==========================================
       if (isFocusedOnEpBtn && isUp) {
         const curRect = document.activeElement.getBoundingClientRect();
         const parentGrid = document.activeElement.closest('.episode-grid');
         if (parentGrid) {
           const firstBtn = parentGrid.querySelector('.episode-btn');
-          if (firstBtn && Math.abs(firstBtn.getBoundingClientRect().top - curRect.top) < 18) {
-            if (playerWrapper && typeof TvSpatialNav !== 'undefined') {
-              TvSpatialNav.focusElement(playerWrapper);
+          if (firstBtn && Math.abs(firstBtn.getBoundingClientRect().top - curRect.top) < 24) {
+            const target = isCenterVisible ? centerOverlay : playerWrapper;
+            if (target && typeof TvSpatialNav !== 'undefined') {
+              TvSpatialNav.focusElement(target);
               scrollVideoToTop(true);
               return true;
             }
