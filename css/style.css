@@ -560,11 +560,13 @@ a:hover {
   margin-bottom: 16px;
 }
 
-.player-wrapper video {
+.player-wrapper video,
+.player-wrapper iframe {
   width: 100%;
   height: 100%;
   object-fit: contain;
   background: #000;
+  border: none;
 }
 
 /* Player Top Floating Bar (Brightness & Fullscreen) */
@@ -713,8 +715,11 @@ a:hover {
 }
 
 .player-wrapper:fullscreen video,
+.player-wrapper:fullscreen iframe,
 .player-wrapper:-webkit-full-screen video,
-.player-wrapper:-moz-full-screen video {
+.player-wrapper:-webkit-full-screen iframe,
+.player-wrapper:-moz-full-screen video,
+.player-wrapper:-moz-full-screen iframe {
   width: 100vw !important;
   height: 100vh !important;
   max-height: none !important;

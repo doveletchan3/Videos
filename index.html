@@ -35,6 +35,7 @@
         <li class="active"><a href="javascript:void(0)" onclick="filterCategory('all', this)">首頁</a></li>
         <li><a href="javascript:void(0)" onclick="filterCategory('電影', this)">電影</a></li>
         <li><a href="javascript:void(0)" onclick="filterCategory('劇集', this)">劇集</a></li>
+        <li><a href="javascript:void(0)" onclick="filterCategory('新聞', this)">新聞</a></li>
         <li class="nav-right">
           <a href="history.html" class="nav-history-link">播放歷史</a>
         </li>
@@ -110,7 +111,8 @@
 
     const SUBCATEGORIES = {
       "劇集": ["全部", "國產劇", "美劇", "英劇", "韓劇", "日劇", "港劇", "日本動畫", "綜藝", "紀錄片"],
-      "電影": ["全部", "最新", "經典", "華語", "歐美", "韓國", "日本", "動作", "喜劇", "愛情", "科幻", "懸疑", "恐怖"]
+      "電影": ["全部", "最新", "經典", "華語", "歐美", "韓國", "日本", "動作", "喜劇", "愛情", "科幻", "懸疑", "恐怖"],
+      "新聞": ["全部", "CTV Vancouver", "Vancouver at Six", "CityNews", "本地新聞", "加國新聞"]
     };
 
     const YEARS = [
@@ -124,10 +126,12 @@
       // Check query param for category
       const urlCat = getUrlParam('cat');
       if (urlCat) {
-        if (urlCat.includes('電影') || urlCat.includes('電影')) {
+        if (urlCat.includes('電影')) {
           currentCategory = '電影';
-        } else if (urlCat.includes('劇') || urlCat.includes('劇')) {
+        } else if (urlCat.includes('劇')) {
           currentCategory = '劇集';
+        } else if (urlCat.includes('新聞') || urlCat.toLowerCase().includes('news')) {
+          currentCategory = '新聞';
         }
         updateNavActive();
       }
@@ -158,6 +162,7 @@
         if (currentCategory === 'all' && txt === '首頁') li.classList.add('active');
         else if (currentCategory === '電影' && txt === '電影') li.classList.add('active');
         else if (currentCategory === '劇集' && txt === '劇集') li.classList.add('active');
+        else if (currentCategory === '新聞' && txt === '新聞') li.classList.add('active');
         else li.classList.remove('active');
       });
       document.getElementById('currentCategoryTitle').textContent = currentCategory === 'all' ? '全部影片' : currentCategory;
@@ -311,8 +316,10 @@
         tagList = SUBCATEGORIES['劇集'];
       } else if (currentCategory === '電影') {
         tagList = SUBCATEGORIES['電影'];
+      } else if (currentCategory === '新聞') {
+        tagList = SUBCATEGORIES['新聞'];
       } else {
-        tagList = ["全部", "熱門", "電影", "劇集", "國產劇", "美劇", "韓劇", "日劇", "日本動畫", "綜藝", "紀錄片"];
+        tagList = ["全部", "熱門", "新聞", "電影", "劇集", "國產劇", "美劇", "韓劇", "日劇", "日本動畫", "綜藝", "紀錄片"];
       }
 
       // Render top subcat strip

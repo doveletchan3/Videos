@@ -1,5 +1,109 @@
 [
   {
+    "id": "11658",
+    "title": "CTV News Vancouver at Six",
+    "poster": "data/posters/ctv_at_six.jpg",
+    "category": "新聞",
+    "subcategory": "CTV Vancouver",
+    "tags": [
+      "新聞",
+      "熱門",
+      "CTV Vancouver",
+      "Vancouver at Six",
+      "溫哥華",
+      "加拿大",
+      "本地新聞"
+    ],
+    "details": {
+      "alias": "CTV Vancouver at 6, CTV 溫哥華六點新聞, 溫哥華晚間新聞",
+      "year": "2026",
+      "region": "加拿大",
+      "actors": "Mi-Jung Lee, Scott Roberts, CTV News Vancouver Team",
+      "intro": "CTV News Vancouver at Six 是加拿大卑詩省及溫哥華地區最權威、收視率最高的晚間新聞旗艦節目。每日傍晚 6:00 播報大溫哥華地區、BC 省乃至全加拿大的最新重大新聞、深度專題報導、交通天氣與社區動態。"
+    },
+    "sources": [
+      {
+        "source_index": 1,
+        "source_id": "ctv_van_at_six",
+        "name": "線路1 - 官方回看點播 (Vancouver at Six)",
+        "lang": "English",
+        "episode_count": 14,
+        "episodes": [
+          {
+            "name": "10月14日 (三)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3457783"
+          },
+          {
+            "name": "10月13日 (二)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3457768"
+          },
+          {
+            "name": "10月09日 (五)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3453254"
+          },
+          {
+            "name": "10月08日 (四)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3453275"
+          },
+          {
+            "name": "10月07日 (三)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3453266"
+          },
+          {
+            "name": "10月06日 (二)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3453263"
+          },
+          {
+            "name": "10月05日 (一)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3453252"
+          },
+          {
+            "name": "10月02日 (五)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3449365"
+          },
+          {
+            "name": "10月01日 (四)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3449377"
+          },
+          {
+            "name": "09月29日 (二)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3449357"
+          },
+          {
+            "name": "09月28日 (一)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3449369"
+          },
+          {
+            "name": "09月25日 (五)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3446011"
+          },
+          {
+            "name": "09月22日 (二)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3446003"
+          },
+          {
+            "name": "09月21日 (一)",
+            "url": "https://www.ctvnews.ca/video/?clipId=3446023"
+          }
+        ]
+      },
+      {
+        "source_index": 2,
+        "source_id": "citynews_van_live",
+        "name": "線路2 - CityNews 溫哥華全天直播 (備用)",
+        "lang": "English",
+        "episode_count": 1,
+        "episodes": [
+          {
+            "name": "全天實時直播 (Live)",
+            "url": "https://citynewsregional.akamaized.net/hls/live/1024054/Regional_Live_9/master.m3u8"
+          }
+        ]
+      }
+    ],
+    "updatedAt": "2026-10-15T14:24:15.416320"
+  },
+  {
     "id": "1025585",
     "title": "Doctor X：白色黑手黨時代",
     "poster": "data/posters/1025585.jpg",

@@ -37,6 +37,7 @@
         <li><a href="index.html">首頁</a></li>
         <li><a href="index.html?cat=電影">電影</a></li>
         <li><a href="index.html?cat=劇集">劇集</a></li>
+        <li><a href="index.html?cat=新聞">新聞</a></li>
         <li class="nav-right">
           <a href="history.html" class="nav-history-link">播放歷史</a>
         </li>
@@ -50,6 +51,7 @@
     <!-- Video Player Container (16:9) -->
     <div class="player-wrapper" id="playerWrapper" tabindex="0" title="遙控器按 OK 鍵播放/暫停，左右鍵快進/快退 10 秒，雙擊 OK 或按菜單鍵全螢幕">
       <video id="mainVideoPlayer" controls playsinline webkit-playsinline x5-playsinline preload="metadata"></video>
+      <iframe id="embedPlayerFrame" style="display: none; width: 100%; height: 100%; border: none; background: #000; position: absolute; top: 0; left: 0; z-index: 10;" allowfullscreen allow="autoplay; fullscreen; encrypted-media"></iframe>
       <div id="tvSeekToast" class="tv-player-toast"></div>
       <div class="player-top-floating-bar">
         <button id="playerFloatBrightnessBtn" onclick="cycleBrightness(event)" class="player-float-btn" title="循環調整畫面亮度 (遙控器按 B 鍵切換)" tabindex="0" role="button">
@@ -567,18 +569,28 @@
       const centerOverlay = document.getElementById('centerPlayOverlay');
       const prefixEl = document.getElementById('playStatusPrefix');
 
+      const isEmbed = ep.url && !ep.url.toLowerCase().includes('.m3u8') && !ep.url.toLowerCase().includes('.mp4') && ep.url.startsWith('http');
+
       if (autoPlay) {
         if (centerOverlay) centerOverlay.style.display = 'none';
-        loadingOverlay.style.display = 'flex';
-        loadingText.textContent = `正在連接 ${epLabel}...`;
+        if (!isEmbed) {
+          loadingOverlay.style.display = 'flex';
+          loadingText.textContent = `正在連接 ${epLabel}...`;
+        } else {
+          loadingOverlay.style.display = 'none';
+        }
         if (prefixEl) prefixEl.textContent = '當前正在播放：';
         // When changing episode, smoothly scroll video window to top of screen
         scrollVideoToTop(true);
       } else {
         loadingOverlay.style.display = 'none';
-        if (centerOverlay) centerOverlay.style.display = 'flex';
+        if (centerOverlay) centerOverlay.style.display = isEmbed ? 'none' : 'flex';
         if (prefixEl) prefixEl.textContent = '當前已選分集：';
         scrollVideoToTop(false);
+      }
+
+      if (isEmbed) {
+        WatchHistory.save(currentVideo, sIdx, eIdx, ep.name, 0, 0);
       }
 
       loadStreamUrl(ep.url, resumeTime, autoPlay);
@@ -626,6 +638,30 @@
       if (hls) {
         hls.destroy();
         hls = null;
+      }
+
+      const embedFrame = document.getElementById('embedPlayerFrame');
+      const isEmbed = !streamUrl.toLowerCase().includes('.m3u8') && !streamUrl.toLowerCase().includes('.mp4') && streamUrl.startsWith('http');
+
+      if (isEmbed) {
+        videoEl.pause();
+        videoEl.style.display = 'none';
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        const centerOverlay = document.getElementById('centerPlayOverlay');
+        if (centerOverlay) centerOverlay.style.display = 'none';
+        if (embedFrame) {
+          embedFrame.style.display = 'block';
+          if (embedFrame.src !== streamUrl) {
+            embedFrame.src = streamUrl;
+          }
+        }
+        return;
+      } else {
+        if (embedFrame) {
+          embedFrame.style.display = 'none';
+          embedFrame.src = 'about:blank';
+        }
+        videoEl.style.display = 'block';
       }
 
       const isM3u8 = streamUrl.toLowerCase().includes('.m3u8');
