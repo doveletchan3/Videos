@@ -98,6 +98,11 @@
           (線路利用網路爬蟲技術獲取，各線路的版本、清晰度、播放速度等存在差異請自行切換。建議避開晚上高峯時段。)
         </p>
 
+        <!-- Embed Mode Fullscreen & Remote Control Tip Banner -->
+        <div id="embedTipBanner" style="display: none; background: #fffbeb; border: 1px solid #fef3c7; color: #b45309; padding: 10px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 14px; line-height: 1.5;">
+          📺 <strong>滿版全螢幕觀看提示：</strong>當前為 CTV 官方網頁嵌入源，如需影片完全貼邊滿版，可<strong>雙擊影片畫面</strong>或點擊影片內部右下角的 <strong>⛶ 全螢幕</strong>按鈕；若使用電視遙控器，推薦切換至<strong>「線路1 (CityNews)」</strong>或<strong>「線路2 (CBC Vancouver at 6)」</strong>享受免加密純影片滿版秒播與遙控快進。
+        </div>
+
         <!-- Current Playing Status Badge & Brightness Tuning -->
         <div id="currentPlayStatus" style="margin-bottom: 14px; font-size: 13px; color: #555; background: #f0f7ff; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
           <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -646,6 +651,7 @@
       const embedFrame = document.getElementById('embedPlayerFrame');
       const playerWrap = document.getElementById('playerWrapper');
       const extBtn = document.getElementById('playerFloatExternalBtn');
+      const tipBanner = document.getElementById('embedTipBanner');
       const isEmbed = !streamUrl.toLowerCase().includes('.m3u8') && !streamUrl.toLowerCase().includes('.mp4') && streamUrl.startsWith('http');
 
       if (isEmbed) {
@@ -654,11 +660,27 @@
         if (loadingOverlay) loadingOverlay.style.display = 'none';
         const centerOverlay = document.getElementById('centerPlayOverlay');
         if (centerOverlay) centerOverlay.style.display = 'none';
-        if (playerWrap) playerWrap.classList.add('is-embed-mode');
-        if (extBtn) {
-          extBtn.style.display = 'inline-flex';
-          extBtn.href = streamUrl;
+
+        const isCtvWeb = streamUrl.includes('ctvnews.ca');
+        if (playerWrap) {
+          if (isCtvWeb) {
+            playerWrap.classList.add('is-embed-mode');
+          } else {
+            playerWrap.classList.remove('is-embed-mode');
+          }
         }
+        if (extBtn) {
+          if (isCtvWeb) {
+            extBtn.style.display = 'inline-flex';
+            extBtn.href = streamUrl;
+          } else {
+            extBtn.style.display = 'none';
+          }
+        }
+        if (tipBanner) {
+          tipBanner.style.display = isCtvWeb ? 'block' : 'none';
+        }
+
         if (embedFrame) {
           embedFrame.style.display = 'block';
           if (embedFrame.src !== streamUrl) {
@@ -669,6 +691,7 @@
       } else {
         if (playerWrap) playerWrap.classList.remove('is-embed-mode');
         if (extBtn) extBtn.style.display = 'none';
+        if (tipBanner) tipBanner.style.display = 'none';
         if (embedFrame) {
           embedFrame.style.display = 'none';
           embedFrame.src = 'about:blank';

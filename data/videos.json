@@ -1,31 +1,75 @@
 [
   {
-    "id": "11658",
-    "title": "CTV News Vancouver at Six",
+    "id": "11659",
+    "title": "[方案B] 溫哥華六點新聞 (純淨全螢幕版)",
     "poster": "data/posters/ctv_at_six.jpg",
     "category": "新聞",
-    "subcategory": "CTV Vancouver",
+    "subcategory": "Vancouver at Six",
     "tags": [
       "新聞",
       "熱門",
-      "CTV Vancouver",
       "Vancouver at Six",
+      "CityNews",
+      "CBC",
+      "CTV Vancouver",
       "溫哥華",
       "加拿大",
       "本地新聞"
     ],
     "details": {
-      "alias": "CTV Vancouver at 6, CTV 溫哥華六點新聞, 溫哥華晚間新聞",
+      "alias": "Vancouver at Six (Plan B Pure Video), 溫哥華六點新聞純影片版, 滿版全螢幕",
       "year": "2026",
       "region": "加拿大",
-      "actors": "Mi-Jung Lee, Scott Roberts, CTV News Vancouver Team",
-      "intro": "CTV News Vancouver at Six 是加拿大卑詩省及溫哥華地區最權威、收視率最高的晚間新聞旗艦節目。每日傍晚 6:00 播報大溫哥華地區、BC 省乃至全加拿大的最新重大新聞、深度專題報導、交通天氣與社區動態。"
+      "actors": "Janella Hamilton, Dan Burritt, CityNews & CTV Teams",
+      "intro": "【方案 B - 純淨原生全螢幕體驗】徹底解決官方網站內嵌時畫面偏小、帶有網頁頂欄與快訊干擾的問題。本節目收錄溫哥華主流六點新聞節目，採用 100% 純影片無干擾滿版播放，全面支援電視盒子遙控器快進/快退 10 秒、全螢幕貼邊縮放與畫面亮度調節。"
     },
     "sources": [
       {
         "source_index": 1,
-        "source_id": "ctv_van_at_six",
-        "name": "線路1 - 官方回看點播 (Vancouver at Six)",
+        "source_id": "citynews_van_native",
+        "name": "線路1 - CityNews 溫哥華 720p 實時新聞 (免加密原生秒播 · 滿版全螢幕 · 支援遙控)",
+        "lang": "English",
+        "episode_count": 1,
+        "episodes": [
+          {
+            "name": "全天實時直播 (Live)",
+            "url": "https://citynewsregional.akamaized.net/hls/live/1024054/Regional_Live_9/master.m3u8"
+          }
+        ]
+      },
+      {
+        "source_index": 2,
+        "source_id": "cbc_van_at_six_native",
+        "name": "線路2 - CBC 溫哥華六點新聞 (Vancouver at 6 每日完整錄播 · 100% 純淨滿版)",
+        "lang": "English",
+        "episode_count": 5,
+        "episodes": [
+          {
+            "name": "10月12日 (日)",
+            "url": "https://www.youtube-nocookie.com/embed/KK4o8TBs68w?autoplay=1"
+          },
+          {
+            "name": "10月09日 (五)",
+            "url": "https://www.youtube-nocookie.com/embed/ErVGP4JvfPY?autoplay=1"
+          },
+          {
+            "name": "10月06日 (二)",
+            "url": "https://www.youtube-nocookie.com/embed/oXljU2yk20E?autoplay=1"
+          },
+          {
+            "name": "10月05日 (一)",
+            "url": "https://www.youtube-nocookie.com/embed/mD63N3TMus0?autoplay=1"
+          },
+          {
+            "name": "10月02日 (五)",
+            "url": "https://www.youtube-nocookie.com/embed/SovRgfiEwgk?autoplay=1"
+          }
+        ]
+      },
+      {
+        "source_index": 3,
+        "source_id": "ctv_van_at_six_web",
+        "name": "線路3 - CTV 溫哥華官網原頁 (Vancouver at Six 官網嵌入版)",
         "lang": "English",
         "episode_count": 14,
         "episodes": [
@@ -86,17 +130,137 @@
             "url": "https://www.ctvnews.ca/vancouver/video/?id=3446023"
           }
         ]
-      },
+      }
+    ],
+    "updatedAt": "2026-10-15T15:16:05.970120"
+  },
+  {
+    "id": "11658",
+    "title": "CTV News Vancouver at Six",
+    "poster": "data/posters/ctv_at_six.jpg",
+    "category": "新聞",
+    "subcategory": "CTV Vancouver",
+    "tags": [
+      "新聞",
+      "熱門",
+      "CTV Vancouver",
+      "Vancouver at Six",
+      "溫哥華",
+      "加拿大",
+      "本地新聞"
+    ],
+    "details": {
+      "alias": "CTV Vancouver at 6, CTV 溫哥華六點新聞, 溫哥華晚間新聞",
+      "year": "2026",
+      "region": "加拿大",
+      "actors": "Mi-Jung Lee, Scott Roberts, CTV News Vancouver Team",
+      "intro": "CTV News Vancouver at Six 是加拿大卑詩省及溫哥華地區最權威的晚間新聞旗艦節目。包含 CityNews 原生免加密純影片、CBC Vancouver at 6 完整錄播以及 CTV 官網回看。"
+    },
+    "sources": [
       {
-        "source_index": 2,
-        "source_id": "citynews_van_live",
-        "name": "線路2 - CityNews 溫哥華全天直播 (備用)",
+        "source_index": 1,
+        "source_id": "citynews_van_native",
+        "name": "線路1 - CityNews 溫哥華 720p 實時新聞 (免加密原生秒播 · 滿版全螢幕 · 支援遙控)",
         "lang": "English",
         "episode_count": 1,
         "episodes": [
           {
             "name": "全天實時直播 (Live)",
             "url": "https://citynewsregional.akamaized.net/hls/live/1024054/Regional_Live_9/master.m3u8"
+          }
+        ]
+      },
+      {
+        "source_index": 2,
+        "source_id": "cbc_van_at_six_native",
+        "name": "線路2 - CBC 溫哥華六點新聞 (Vancouver at 6 每日完整錄播 · 100% 純淨滿版)",
+        "lang": "English",
+        "episode_count": 5,
+        "episodes": [
+          {
+            "name": "10月12日 (日)",
+            "url": "https://www.youtube-nocookie.com/embed/KK4o8TBs68w?autoplay=1"
+          },
+          {
+            "name": "10月09日 (五)",
+            "url": "https://www.youtube-nocookie.com/embed/ErVGP4JvfPY?autoplay=1"
+          },
+          {
+            "name": "10月06日 (二)",
+            "url": "https://www.youtube-nocookie.com/embed/oXljU2yk20E?autoplay=1"
+          },
+          {
+            "name": "10月05日 (一)",
+            "url": "https://www.youtube-nocookie.com/embed/mD63N3TMus0?autoplay=1"
+          },
+          {
+            "name": "10月02日 (五)",
+            "url": "https://www.youtube-nocookie.com/embed/SovRgfiEwgk?autoplay=1"
+          }
+        ]
+      },
+      {
+        "source_index": 3,
+        "source_id": "ctv_van_at_six_web",
+        "name": "線路3 - CTV 溫哥華官網原頁 (Vancouver at Six 官網嵌入版)",
+        "lang": "English",
+        "episode_count": 14,
+        "episodes": [
+          {
+            "name": "10月14日 (三)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3457783"
+          },
+          {
+            "name": "10月13日 (二)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3457768"
+          },
+          {
+            "name": "10月09日 (五)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453254"
+          },
+          {
+            "name": "10月08日 (四)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453275"
+          },
+          {
+            "name": "10月07日 (三)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453266"
+          },
+          {
+            "name": "10月06日 (二)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453263"
+          },
+          {
+            "name": "10月05日 (一)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453252"
+          },
+          {
+            "name": "10月02日 (五)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3449365"
+          },
+          {
+            "name": "10月01日 (四)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3449377"
+          },
+          {
+            "name": "09月29日 (二)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3449357"
+          },
+          {
+            "name": "09月28日 (一)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3449369"
+          },
+          {
+            "name": "09月25日 (五)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3446011"
+          },
+          {
+            "name": "09月22日 (二)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3446003"
+          },
+          {
+            "name": "09月21日 (一)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3446023"
           }
         ]
       }
