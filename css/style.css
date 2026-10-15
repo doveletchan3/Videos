@@ -558,6 +558,13 @@ a:hover {
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   margin-bottom: 16px;
+  transition: min-height 0.3s ease, height 0.3s ease;
+}
+
+.player-wrapper.is-embed-mode {
+  aspect-ratio: auto;
+  min-height: 580px;
+  height: 68vh;
 }
 
 .player-wrapper video,

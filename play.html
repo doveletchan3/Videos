@@ -54,6 +54,9 @@
       <iframe id="embedPlayerFrame" style="display: none; width: 100%; height: 100%; border: none; background: #000; position: absolute; top: 0; left: 0; z-index: 10;" allowfullscreen allow="autoplay; fullscreen; encrypted-media"></iframe>
       <div id="tvSeekToast" class="tv-player-toast"></div>
       <div class="player-top-floating-bar">
+        <a id="playerFloatExternalBtn" href="javascript:void(0)" target="_blank" class="player-float-btn" style="display: none;" title="在新分頁打開 CTV 官方原網頁播放" tabindex="0" role="button">
+          ↗️ 官方原頁
+        </a>
         <button id="playerFloatBrightnessBtn" onclick="cycleBrightness(event)" class="player-float-btn" title="循環調整畫面亮度 (遙控器按 B 鍵切換)" tabindex="0" role="button">
           🔆 <span id="floatBrightnessText">亮度 100%</span>
         </button>
@@ -641,6 +644,8 @@
       }
 
       const embedFrame = document.getElementById('embedPlayerFrame');
+      const playerWrap = document.getElementById('playerWrapper');
+      const extBtn = document.getElementById('playerFloatExternalBtn');
       const isEmbed = !streamUrl.toLowerCase().includes('.m3u8') && !streamUrl.toLowerCase().includes('.mp4') && streamUrl.startsWith('http');
 
       if (isEmbed) {
@@ -649,6 +654,11 @@
         if (loadingOverlay) loadingOverlay.style.display = 'none';
         const centerOverlay = document.getElementById('centerPlayOverlay');
         if (centerOverlay) centerOverlay.style.display = 'none';
+        if (playerWrap) playerWrap.classList.add('is-embed-mode');
+        if (extBtn) {
+          extBtn.style.display = 'inline-flex';
+          extBtn.href = streamUrl;
+        }
         if (embedFrame) {
           embedFrame.style.display = 'block';
           if (embedFrame.src !== streamUrl) {
@@ -657,6 +667,8 @@
         }
         return;
       } else {
+        if (playerWrap) playerWrap.classList.remove('is-embed-mode');
+        if (extBtn) extBtn.style.display = 'none';
         if (embedFrame) {
           embedFrame.style.display = 'none';
           embedFrame.src = 'about:blank';
