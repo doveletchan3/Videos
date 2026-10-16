@@ -62,6 +62,10 @@
         "episode_count": 14,
         "episodes": [
           {
+            "name": "10月15日 (四)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3457782"
+          },
+          {
             "name": "10月14日 (三)",
             "url": "https://www.ctvnews.ca/vancouver/video/?id=3457783"
           },
@@ -112,15 +116,11 @@
           {
             "name": "09月22日 (二)",
             "url": "https://www.ctvnews.ca/vancouver/video/?id=3446003"
-          },
-          {
-            "name": "09月21日 (一)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3446023"
           }
         ]
       }
     ],
-    "updatedAt": "2026-10-15T17:10:34.083675"
+    "updatedAt": "2026-10-15T20:19:12.767299"
   },
   {
     "id": "1025585",
