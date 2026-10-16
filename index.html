@@ -190,6 +190,9 @@
       // Category filter
       if (currentCategory !== 'all') {
         filtered = filtered.filter(v => (v.category || '').includes(currentCategory));
+      } else {
+        // 首頁主選單隱藏「新聞」分類，新聞僅在進入專屬「新聞」分類時顯示
+        filtered = filtered.filter(v => (v.category || '') !== '新聞');
       }
 
       // Tag / Subcategory filter
@@ -319,7 +322,7 @@
       } else if (currentCategory === '新聞') {
         tagList = SUBCATEGORIES['新聞'];
       } else {
-        tagList = ["全部", "熱門", "新聞", "電影", "劇集", "國產劇", "美劇", "韓劇", "日劇", "日本動畫", "綜藝", "紀錄片"];
+        tagList = ["全部", "熱門", "電影", "劇集", "國產劇", "美劇", "韓劇", "日劇", "日本動畫", "綜藝", "紀錄片"];
       }
 
       // Render top subcat strip

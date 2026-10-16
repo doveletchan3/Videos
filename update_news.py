@@ -79,7 +79,7 @@ def update_news():
         
     updated = False
     for v in videos:
-        if str(v.get('id')) in ['11658', '11659']:
+        if str(v.get('id')) == '11658':
             for s in v.get('sources', []):
                 if 'ctv_van_at_six_web' in s.get('source_id', ''):
                     s['episodes'] = ctv_web_episodes
