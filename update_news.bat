@@ -1,16 +1,23 @@
 @echo off
 chcp 65001 >nul
+title CTV News Vancouver at Six 自動更新
 echo ============================================================
-echo   正在自動獲取 CTV News Vancouver at Six 最新一期溫哥華新聞...
+echo   正在自動獲取 CTV News Vancouver at Six 最新溫哥華新聞...
 echo ============================================================
+echo.
 python update_news.py
-if %ERRORLEVEL% equ 0 (
-    echo.
-    echo ✅ 溫哥華六點新聞列表已成功更新為官方最新節目！
-    echo 刷新網頁即可直接觀看。
-) else (
-    echo.
-    echo ❌ 獲取更新失敗，請檢查網絡連線或 Python 環境。
-)
+if errorlevel 1 goto :fail
+
+:success
+echo.
+echo [OK] 溫哥華六點新聞已成功更新為官方最新節目！
+echo 重新整理網頁即可直接觀看。
+goto :end
+
+:fail
+echo.
+echo [ERROR] 獲取更新失敗，請檢查網絡連線或 Python 環境。
+
+:end
 echo.
 pause
