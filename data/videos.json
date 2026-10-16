@@ -19,47 +19,15 @@
       "year": "2026",
       "region": "加拿大",
       "actors": "Mi-Jung Lee, Scott Roberts, CTV News Vancouver Team",
-      "intro": "CTV News Vancouver at Six 是加拿大卑詩省及溫哥華地區最權威的晚間新聞旗艦節目。包含 CTV Vancouver at Six 官方純影片滿版全螢幕、CityNews 24小時實時直播，以及 CTV 官網 14 期完整回看。"
+      "intro": "CTV News Vancouver at Six 是加拿大卑詩省及溫哥華地區最權威的晚間新聞旗艦節目。包含 CTV 官網 5 期完整回看、CTV Vancouver at Six 官方純影片滿版全螢幕，以及 CityNews 24小時實時直播。"
     },
     "sources": [
       {
         "source_index": 1,
-        "source_id": "ctv_van_at_six_pure",
-        "name": "線路1 - CTV 溫哥華六點新聞 (Vancouver at Six 滿版純影片 · 每日焦點)",
-        "lang": "English",
-        "episode_count": 2,
-        "episodes": [
-          {
-            "name": "10月14日 (三)",
-            "url": "https://www.youtube-nocookie.com/embed/6tGdMLiKJd4?autoplay=1",
-            "title": "B.C. leaders face off in debate | CTV News Vancouver at Six for Oct. 14, 2026"
-          },
-          {
-            "name": "10月13日 (二)",
-            "url": "https://www.youtube-nocookie.com/embed/SF2HDgJaZuk?autoplay=1",
-            "title": "Chided on childcare | CTV News Vancouver at Six for October 13, 2026"
-          }
-        ]
-      },
-      {
-        "source_index": 2,
-        "source_id": "citynews_van_live",
-        "name": "線路2 - CityNews 溫哥華電視台 (全天高清直播 · 原生秒播 · 支援遙控)",
-        "lang": "English",
-        "episode_count": 1,
-        "episodes": [
-          {
-            "name": "全天實時直播 (Live)",
-            "url": "https://citynewsregional.akamaized.net/hls/live/1024054/Regional_Live_9/master.m3u8"
-          }
-        ]
-      },
-      {
-        "source_index": 3,
         "source_id": "ctv_van_at_six_web",
-        "name": "線路3 - CTV 溫哥華官網原頁 (Vancouver at Six 14期完整版 · 雙擊滿版)",
+        "name": "線路1 - CTV 溫哥華官網原頁 (Vancouver at Six 5期完整版 · 雙擊滿版)",
         "lang": "English",
-        "episode_count": 14,
+        "episode_count": 5,
         "episodes": [
           {
             "name": "10月15日 (四)",
@@ -80,47 +48,43 @@
           {
             "name": "10月08日 (四)",
             "url": "https://www.ctvnews.ca/vancouver/video/?id=3453275"
+          }
+        ]
+      },
+      {
+        "source_index": 2,
+        "source_id": "ctv_van_at_six_pure",
+        "name": "線路2 - CTV 溫哥華六點新聞 (Vancouver at Six 滿版純影片 · 每日焦點)",
+        "lang": "English",
+        "episode_count": 2,
+        "episodes": [
+          {
+            "name": "10月14日 (三)",
+            "url": "https://www.youtube-nocookie.com/embed/6tGdMLiKJd4?autoplay=1",
+            "title": "B.C. leaders face off in debate | CTV News Vancouver at Six for Oct. 14, 2026"
           },
           {
-            "name": "10月07日 (三)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453266"
-          },
+            "name": "10月13日 (二)",
+            "url": "https://www.youtube-nocookie.com/embed/SF2HDgJaZuk?autoplay=1",
+            "title": "Chided on childcare | CTV News Vancouver at Six for October 13, 2026"
+          }
+        ]
+      },
+      {
+        "source_index": 3,
+        "source_id": "citynews_van_live",
+        "name": "線路3 - CityNews 溫哥華電視台 (全天高清直播 · 原生秒播 · 支援遙控)",
+        "lang": "English",
+        "episode_count": 1,
+        "episodes": [
           {
-            "name": "10月06日 (二)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453263"
-          },
-          {
-            "name": "10月05日 (一)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453252"
-          },
-          {
-            "name": "10月02日 (五)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3449365"
-          },
-          {
-            "name": "10月01日 (四)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3449377"
-          },
-          {
-            "name": "09月29日 (二)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3449357"
-          },
-          {
-            "name": "09月28日 (一)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3449369"
-          },
-          {
-            "name": "09月25日 (五)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3446011"
-          },
-          {
-            "name": "09月22日 (二)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3446003"
+            "name": "全天實時直播 (Live)",
+            "url": "https://citynewsregional.akamaized.net/hls/live/1024054/Regional_Live_9/master.m3u8"
           }
         ]
       }
     ],
-    "updatedAt": "2026-10-15T20:19:12.767299"
+    "updatedAt": "2026-10-15T20:32:39.737944"
   },
   {
     "id": "1025585",

@@ -49,7 +49,7 @@ def format_ep_name(title):
     return title
 
 def update_news():
-    api_url = 'http://capi.9c9media.com/destinations/ctvnews_web/platforms/desktop/collections/11658/contents?page=1&pageSize=14'
+    api_url = 'http://capi.9c9media.com/destinations/ctvnews_web/platforms/desktop/collections/11658/contents?page=1&pageSize=5'
     req = urllib.request.Request(api_url, headers={'User-Agent': 'Mozilla/5.0'})
     
     print(f"Fetching CTV Collection 11658 from {api_url}...")
@@ -64,7 +64,7 @@ def update_news():
     print(f"Retrieved {len(items)} CTV News Vancouver at Six episodes.")
     
     ctv_web_episodes = []
-    for it in items:
+    for it in items[:5]:
         aid = it.get('Id')
         title = it.get('Name') or f"CTV News Vancouver at Six (Id: {aid})"
         name = format_ep_name(title)
@@ -82,6 +82,7 @@ def update_news():
         if str(v.get('id')) == '11658':
             for s in v.get('sources', []):
                 if 'ctv_van_at_six_web' in s.get('source_id', ''):
+                    s['name'] = "線路1 - CTV 溫哥華官網原頁 (Vancouver at Six 5期完整版 · 雙擊滿版)"
                     s['episodes'] = ctv_web_episodes
                     s['episode_count'] = len(ctv_web_episodes)
                     updated = True
