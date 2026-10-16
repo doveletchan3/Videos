@@ -1,0 +1,40 @@
+name: Daily Vancouver News Auto-Updater
+
+on:
+  schedule:
+    # Runs everyday at 03:00 UTC (8:00 PM Vancouver Pacific Time, after the 6:00 PM broadcast concludes)
+    - cron: '0 3 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch Latest CTV News Vancouver at Six
+        run: |
+          python update_news.py
+
+      - name: Commit and Push if updated
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action News Updater"
+          if ! git diff --quiet data/videos.json; then
+            git add data/videos.json
+            git commit -m "chore(auto): update daily CTV News Vancouver at Six broadcast [skip ci]"
+            git push origin main
+            echo "Successfully committed and pushed updated news broadcast."
+          else
+            echo "No new broadcast published yet today."
+          fi
