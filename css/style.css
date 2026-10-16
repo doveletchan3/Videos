@@ -563,8 +563,10 @@ a:hover {
 
 .player-wrapper.is-embed-mode {
   aspect-ratio: auto;
-  min-height: 580px;
+  min-height: 520px;
   height: 68vh;
+  max-height: 85vh;
+  background: #111;
 }
 
 .player-wrapper video,
@@ -574,6 +576,11 @@ a:hover {
   object-fit: contain;
   background: #000;
   border: none;
+}
+
+.player-wrapper.is-embed-mode iframe {
+  transform-origin: 0 0;
+  transition: transform 0.2s ease, width 0.2s ease, height 0.2s ease;
 }
 
 /* Player Top Floating Bar (Brightness & Fullscreen) */

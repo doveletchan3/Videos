@@ -54,6 +54,9 @@
       <iframe id="embedPlayerFrame" style="display: none; width: 100%; height: 100%; border: none; background: #000; position: absolute; top: 0; left: 0; z-index: 10;" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       <div id="tvSeekToast" class="tv-player-toast"></div>
       <div class="player-top-floating-bar">
+        <button id="playerFloatZoomBtn" onclick="cycleEmbedZoom(event)" class="player-float-btn" style="display: none;" title="點擊切換官網網頁縮放大小 (電視盒子觀看更舒適，遙控器快捷鍵 Z)" tabindex="0" role="button">
+          🔍 <span id="floatZoomText">網頁大小 75%</span>
+        </button>
         <a id="playerFloatExternalBtn" href="javascript:void(0)" target="_blank" class="player-float-btn" style="display: none;" title="在新分頁打開 CTV 官方原網頁播放" tabindex="0" role="button">
           ↗️ 官方原頁
         </a>
@@ -119,6 +122,20 @@
               <button type="button" onclick="setBrightness(150)" class="brightness-btn-preset" data-b="150" tabindex="0">高亮</button>
               <button type="button" onclick="setBrightness(180)" class="brightness-btn-preset" data-b="180" tabindex="0">超亮</button>
               <button type="button" onclick="setBrightness(200)" class="brightness-btn-preset" data-b="200" tabindex="0">極亮 200%</button>
+            </div>
+          </div>
+
+          <!-- Embed Webpage Zoom Toolbar (Visible when viewing CTV/embed mode for TV Box) -->
+          <div id="embedZoomToolbar" class="brightness-toolbar" style="display: none;" title="電視盒子觀看時可調整官網網頁比例大小">
+            <span class="brightness-label">🔍 官網大小</span>
+            <button type="button" onclick="adjustEmbedZoom(-10)" class="brightness-btn-step" title="縮小 10%" tabindex="0">-</button>
+            <span id="embedZoomValueText" class="brightness-val">75%</span>
+            <button type="button" onclick="adjustEmbedZoom(10)" class="brightness-btn-step" title="放大 10%" tabindex="0">+</button>
+            <div class="brightness-preset-group">
+              <button type="button" onclick="setEmbedZoom(65)" class="brightness-btn-preset" data-zoom="65" tabindex="0">極小 65%</button>
+              <button type="button" onclick="setEmbedZoom(75)" class="brightness-btn-preset active" data-zoom="75" tabindex="0">推薦 75%</button>
+              <button type="button" onclick="setEmbedZoom(85)" class="brightness-btn-preset" data-zoom="85" tabindex="0">適中 85%</button>
+              <button type="button" onclick="setEmbedZoom(100)" class="brightness-btn-preset" data-zoom="100" tabindex="0">原始 100%</button>
             </div>
           </div>
         </div>
@@ -303,6 +320,7 @@
       playEpisode(targetSrc, targetEp, resumeTime, false);
       setupPlayerEvents();
       initVideoBrightness();
+      initEmbedZoom();
 
       // Ensure video player is positioned at the top of the screen on page entry
       scrollVideoToTop(false);
@@ -673,6 +691,17 @@
           }
         }
 
+        const zoomFloatBtn = document.getElementById('playerFloatZoomBtn');
+        const zoomToolbar = document.getElementById('embedZoomToolbar');
+        if (zoomFloatBtn) zoomFloatBtn.style.display = isCtvWeb ? 'inline-flex' : 'none';
+        if (zoomToolbar) zoomToolbar.style.display = isCtvWeb ? 'flex' : 'none';
+
+        if (isCtvWeb) {
+          applyEmbedZoom(currentEmbedZoom);
+        } else {
+          applyEmbedZoom(100);
+        }
+
         if (embedFrame) {
           embedFrame.referrerPolicy = 'strict-origin-when-cross-origin';
           embedFrame.style.display = 'block';
@@ -684,7 +713,11 @@
       } else {
         if (playerWrap) playerWrap.classList.remove('is-embed-mode');
         if (extBtn) extBtn.style.display = 'none';
-        if (tipBanner) tipBanner.style.display = 'none';
+        const zoomFloatBtn = document.getElementById('playerFloatZoomBtn');
+        const zoomToolbar = document.getElementById('embedZoomToolbar');
+        if (zoomFloatBtn) zoomFloatBtn.style.display = 'none';
+        if (zoomToolbar) zoomToolbar.style.display = 'none';
+        applyEmbedZoom(100);
         if (embedFrame) {
           embedFrame.style.display = 'none';
           embedFrame.src = 'about:blank';
@@ -1005,6 +1038,83 @@
       setBrightness(BRIGHTNESS_CYCLE_PRESETS[nextIdx], true);
     }
 
+    // Embedded Webpage (CTV News) Zoom & Scale Engine
+    let currentEmbedZoom = 75; // Default 75% for TV Box comfort
+    const EMBED_ZOOM_STORAGE_KEY = 'ikan_embed_zoom';
+    const EMBED_ZOOM_CYCLE_PRESETS = [75, 65, 85, 100];
+
+    function initEmbedZoom() {
+      try {
+        const saved = localStorage.getItem(EMBED_ZOOM_STORAGE_KEY);
+        if (saved && !isNaN(parseInt(saved, 10))) {
+          const val = parseInt(saved, 10);
+          setEmbedZoom(val, false);
+          return;
+        }
+      } catch (e) {}
+      setEmbedZoom(75, false); // Default 75%
+    }
+
+    function applyEmbedZoom(percent) {
+      const frame = document.getElementById('embedPlayerFrame');
+      if (!frame) return;
+      const pct = Math.max(50, Math.min(120, Math.round(percent)));
+      const scale = pct / 100;
+      const factor = (100 / scale).toFixed(3);
+      frame.style.width = factor + '%';
+      frame.style.height = factor + '%';
+      frame.style.transform = `scale(${scale})`;
+      frame.style.transformOrigin = '0 0';
+    }
+
+    function setEmbedZoom(percent, showToast = true) {
+      percent = Math.max(50, Math.min(120, Math.round(percent)));
+      currentEmbedZoom = percent;
+      try {
+        localStorage.setItem(EMBED_ZOOM_STORAGE_KEY, String(percent));
+      } catch (e) {}
+
+      applyEmbedZoom(percent);
+
+      // Update UI displays
+      const floatTxt = document.getElementById('floatZoomText');
+      if (floatTxt) floatTxt.textContent = `網頁大小 ${percent}%`;
+      const valTxt = document.getElementById('embedZoomValueText');
+      if (valTxt) valTxt.textContent = `${percent}%`;
+
+      // Update preset button active states
+      document.querySelectorAll('#embedZoomToolbar .brightness-btn-preset').forEach(btn => {
+        const bz = parseInt(btn.getAttribute('data-zoom'), 10);
+        btn.classList.toggle('active', bz === percent);
+      });
+
+      if (showToast) {
+        let label = `${percent}%`;
+        if (percent === 75) label += ' (推薦電視)';
+        else if (percent === 65) label += ' (極小)';
+        else if (percent === 85) label += ' (適中)';
+        else if (percent === 100) label += ' (原始)';
+        showTvToast(`🔍 官網網頁大小: ${label}`);
+      }
+    }
+
+    function adjustEmbedZoom(delta) {
+      setEmbedZoom(currentEmbedZoom + delta, true);
+    }
+
+    function cycleEmbedZoom(e) {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      const idx = EMBED_ZOOM_CYCLE_PRESETS.indexOf(currentEmbedZoom);
+      let nextIdx = 0;
+      if (idx !== -1) {
+        nextIdx = (idx + 1) % EMBED_ZOOM_CYCLE_PRESETS.length;
+      } else {
+        const found = EMBED_ZOOM_CYCLE_PRESETS.find(z => z > currentEmbedZoom);
+        nextIdx = found ? EMBED_ZOOM_CYCLE_PRESETS.indexOf(found) : 0;
+      }
+      setEmbedZoom(EMBED_ZOOM_CYCLE_PRESETS[nextIdx], true);
+    }
+
     // Fullscreen Enter / Exit Helpers
     function enterFullScreen() {
       const player = document.getElementById('playerWrapper') || videoEl;
@@ -1095,6 +1205,12 @@
       // Shortcut key 'B' / 'b' (code 66 / 98) to adjust/cycle brightness
       if (key === 'b' || key === 'B' || code === 66 && !isEnter) {
         cycleBrightness();
+        return true;
+      }
+
+      // Shortcut key 'Z' / 'z' (code 90) to adjust/cycle embed webpage zoom
+      if ((key === 'z' || key === 'Z' || code === 90) && playerWrapper && playerWrapper.classList.contains('is-embed-mode')) {
+        cycleEmbedZoom();
         return true;
       }
 
