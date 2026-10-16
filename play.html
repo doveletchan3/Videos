@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="referrer" content="no-referrer">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>正在播放 - 影片串流媒體</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -51,7 +51,7 @@
     <!-- Video Player Container (16:9) -->
     <div class="player-wrapper" id="playerWrapper" tabindex="0" title="遙控器按 OK 鍵播放/暫停，左右鍵快進/快退 10 秒，雙擊 OK 或按菜單鍵全螢幕">
       <video id="mainVideoPlayer" controls playsinline webkit-playsinline x5-playsinline preload="metadata"></video>
-      <iframe id="embedPlayerFrame" style="display: none; width: 100%; height: 100%; border: none; background: #000; position: absolute; top: 0; left: 0; z-index: 10;" allowfullscreen allow="autoplay; fullscreen; encrypted-media"></iframe>
+      <iframe id="embedPlayerFrame" style="display: none; width: 100%; height: 100%; border: none; background: #000; position: absolute; top: 0; left: 0; z-index: 10;" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       <div id="tvSeekToast" class="tv-player-toast"></div>
       <div class="player-top-floating-bar">
         <a id="playerFloatExternalBtn" href="javascript:void(0)" target="_blank" class="player-float-btn" style="display: none;" title="在新分頁打開 CTV 官方原網頁播放" tabindex="0" role="button">
@@ -682,6 +682,7 @@
         }
 
         if (embedFrame) {
+          embedFrame.referrerPolicy = 'strict-origin-when-cross-origin';
           embedFrame.style.display = 'block';
           if (embedFrame.src !== streamUrl) {
             embedFrame.src = streamUrl;
