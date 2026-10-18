@@ -30,6 +30,10 @@
         "episode_count": 5,
         "episodes": [
           {
+            "name": "10月16日 (五)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3457770"
+          },
+          {
             "name": "10月15日 (四)",
             "url": "https://www.ctvnews.ca/vancouver/video/?id=3457782"
           },
@@ -44,10 +48,6 @@
           {
             "name": "10月09日 (五)",
             "url": "https://www.ctvnews.ca/vancouver/video/?id=3453254"
-          },
-          {
-            "name": "10月08日 (四)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453275"
           }
         ]
       },
@@ -58,6 +58,11 @@
         "lang": "English",
         "episode_count": 5,
         "episodes": [
+          {
+            "name": "10月16日 (五)",
+            "url": "https://www.youtube-nocookie.com/embed/5FthvdAV9lQ?autoplay=1",
+            "title": "Tunnel vision | CTV News Vancouver at Six for October 16, 2026"
+          },
           {
             "name": "10月15日 (四)",
             "url": "https://www.youtube-nocookie.com/embed/E3yFvJX8pMU?autoplay=1",
@@ -77,11 +82,6 @@
             "name": "10月09日 (五)",
             "url": "https://www.youtube-nocookie.com/embed/r1I6Mekjerc?autoplay=1",
             "title": "Whirlwind of election promises | CTV News Vancouver at Six for October 9, 2026"
-          },
-          {
-            "name": "10月08日 (四)",
-            "url": "https://www.youtube-nocookie.com/embed/Yf3khpQapoU?autoplay=1",
-            "title": "B.C. Conservative candidate dropped | CTV News Vancouver at Six for Oct. 8, 2026"
           }
         ]
       },
@@ -99,9 +99,7 @@
         ]
       }
     ],
-<<<<<<< HEAD
-    "updatedAt": "2026-10-16T09:04:12.951059"
->>>>>>> 00072df4ae40beda311b48a7f1a079dc4cafd649
+    "updatedAt": "2026-10-17T20:40:20.294279"
   },
   {
     "id": "1025585",
