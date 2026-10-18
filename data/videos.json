@@ -1,5 +1,216 @@
 [
   {
+    "id": "1027358",
+    "title": "幻視任務",
+    "poster": "data/posters/1027358.jpg",
+    "category": "劇集",
+    "subcategory": "美劇",
+    "tags": [
+      "熱門",
+      "美劇",
+      "美國"
+    ],
+    "details": {
+      "alias": "幻視征途(港),旺達幻視衍生劇,幻視追尋,幻視探索,Vision Quest,VisionQuest",
+      "year": "2026",
+      "region": "美國",
+      "actors": "特里·馬塔拉斯,克里斯托弗·J·伯恩,文森佐·納塔利,甘加·蒙泰羅/保羅·貝坦尼,詹姆斯·斯派德,詹姆斯·達西,魯阿里德·莫利卡,戴安·摩根"
+    },
+    "sources": [
+      {
+        "source_index": 2,
+        "source_id": "21429722",
+        "name": "線路2",
+        "episode_count": 2,
+        "episodes": [
+          {
+            "name": "第1集",
+            "url": "https://v.gsuus.com/play/aOYEgRLd/index.m3u8"
+          },
+          {
+            "name": "第2集",
+            "url": "https://v.gsuus.com/play/erkE2oEa/index.m3u8"
+          }
+        ],
+        "lang": "English"
+      },
+      {
+        "source_index": 8,
+        "source_id": "21429736",
+        "name": "線路8",
+        "episode_count": 2,
+        "episodes": [
+          {
+            "name": "第01集",
+            "url": "https://v15.qqqrst.com/yyv15/202610/14/vCsxhXCBB827/video/index.m3u8"
+          },
+          {
+            "name": "第02集",
+            "url": "https://v15.qqqrst.com/yyv15/202610/14/JUx6M6qaku27/video/index.m3u8"
+          }
+        ],
+        "lang": "English"
+      },
+      {
+        "source_index": 13,
+        "source_id": "21429779",
+        "name": "線路13",
+        "episode_count": 2,
+        "episodes": [
+          {
+            "name": "第01集",
+            "url": "https://b3.bdzybf22.com/videos/202610/14/6acef69480d729d4e80689c4/744e6a/index.m3u8"
+          },
+          {
+            "name": "第02集",
+            "url": "https://b3.bdzybf22.com/videos/202610/14/6acef69d80d729d4e80689d0/95e708/index.m3u8"
+          }
+        ],
+        "lang": "English"
+      }
+    ],
+    "updatedAt": "2026-10-17T21:48:19.164201"
+  },
+  {
+    "id": "402539",
+    "title": "釜山行",
+    "poster": "data/posters/402539.jpg",
+    "category": "電影",
+    "subcategory": "韓國",
+    "tags": [
+      "熱門",
+      "韓國"
+    ],
+    "details": {
+      "alias": "屍殺列車(港),屍速列車(臺),TraintoBusan,Busanhaeng,부산행",
+      "year": "2016",
+      "region": "韓國",
+      "actors": "延尚昊/孔劉,鄭有美,馬東錫,金秀安,金義城"
+    },
+    "sources": [
+      {
+        "source_index": 1,
+        "source_id": "3075703",
+        "name": "線路1",
+        "episode_count": 3,
+        "episodes": [
+          {
+            "name": "正片",
+            "url": "https://xlzycdn1.sy-precise.com:65/20220409/j0ngAEvr/index.m3u8"
+          },
+          {
+            "name": "正片",
+            "url": "https://play.xluuss.com/play/e31RWLpb/index.m3u8"
+          },
+          {
+            "name": "正片",
+            "url": "https://play.xluuss.com/play/9avDJ0Xd/index.m3u8"
+          }
+        ],
+        "lang": "粵語"
+      },
+      {
+        "source_index": 2,
+        "source_id": "6253291",
+        "name": "線路2",
+        "episode_count": 3,
+        "episodes": [
+          {
+            "name": "正片",
+            "url": "https://g.gszyx.com:65/20220401/dqdEoKWz/index.m3u8"
+          },
+          {
+            "name": "正片",
+            "url": "https://v.gsuus.com/play/b2k4VKAd/index.m3u8"
+          },
+          {
+            "name": "正片",
+            "url": "https://v.gsuus.com/play/YerX7DKb/index.m3u8"
+          }
+        ],
+        "lang": "粵語"
+      },
+      {
+        "source_index": 7,
+        "source_id": "18574980",
+        "name": "線路7",
+        "episode_count": 2,
+        "episodes": [
+          {
+            "name": "正片",
+            "url": "https://play.hhuus.com/play/Pdy7Y2Wa/index.m3u8"
+          },
+          {
+            "name": "正片",
+            "url": "https://play.hhuus.com/play/e5ynYNXe/index.m3u8"
+          }
+        ],
+        "lang": "粵語"
+      }
+    ],
+    "updatedAt": "2026-10-17T20:53:43.433801"
+  },
+  {
+    "id": "1001027",
+    "title": "蜘蛛俠：嶄新之日",
+    "poster": "data/posters/1001027.jpg",
+    "category": "電影",
+    "subcategory": "歐美",
+    "tags": [
+      "熱門",
+      "歐美",
+      "美國"
+    ],
+    "details": {
+      "alias": "蜘蛛俠：英雄重生(港),蜘蛛人：重生日(臺),蜘蛛俠：重生日,蜘蛛俠：全新日,蜘蛛俠：嶄新一天,蜘蛛俠4,Spider-Man 4,Spider-Man: Brand New Day",
+      "year": "2026",
+      "region": "美國",
+      "actors": "德斯汀·丹尼爾·克雷頓/湯姆·霍蘭德,贊達亞,薩迪·辛克,喬·博恩瑟,雅各布·貝塔隆"
+    },
+    "sources": [
+      {
+        "source_index": 15,
+        "source_id": "21208214",
+        "name": "線路15",
+        "episode_count": 1,
+        "episodes": [
+          {
+            "name": "HD",
+            "url": "https://v13.rstu6.com/202610/06/DmH24nEHiN27/video/index.m3u8"
+          }
+        ],
+        "lang": "English"
+      },
+      {
+        "source_index": 26,
+        "source_id": "21208571",
+        "name": "線路26",
+        "episode_count": 1,
+        "episodes": [
+          {
+            "name": "正片",
+            "url": "https://play.ly166.com:65/videos/20261006/6ac3cb492f204a4c9eb02393/e2f8eg/index.m3u8"
+          }
+        ],
+        "lang": "English"
+      },
+      {
+        "source_index": 27,
+        "source_id": "21208582",
+        "name": "線路27",
+        "episode_count": 1,
+        "episodes": [
+          {
+            "name": "正片",
+            "url": "https://vod1.maowushi.com/20261005/NENsNMEI/index.m3u8"
+          }
+        ],
+        "lang": "English"
+      }
+    ],
+    "updatedAt": "2026-10-17T20:50:38.545342"
+  },
+  {
     "id": "11658",
     "title": "CTV News Vancouver at Six",
     "poster": "data/posters/ctv_at_six.jpg",
