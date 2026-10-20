@@ -241,6 +241,10 @@
         "episode_count": 5,
         "episodes": [
           {
+            "name": "10月19日 (一)",
+            "url": "https://www.ctvnews.ca/vancouver/video/?id=3471999"
+          },
+          {
             "name": "10月16日 (五)",
             "url": "https://www.ctvnews.ca/vancouver/video/?id=3457770"
           },
@@ -255,10 +259,6 @@
           {
             "name": "10月13日 (二)",
             "url": "https://www.ctvnews.ca/vancouver/video/?id=3457768"
-          },
-          {
-            "name": "10月09日 (五)",
-            "url": "https://www.ctvnews.ca/vancouver/video/?id=3453254"
           }
         ]
       },
@@ -269,6 +269,11 @@
         "lang": "English",
         "episode_count": 5,
         "episodes": [
+          {
+            "name": "10月19日 (一)",
+            "url": "https://www.youtube-nocookie.com/embed/DIZSJMoHMF8?autoplay=1",
+            "title": "Frustration for a grieving family | CTV News Vancouver at Six for October 19, 2026"
+          },
           {
             "name": "10月16日 (五)",
             "url": "https://www.youtube-nocookie.com/embed/5FthvdAV9lQ?autoplay=1",
@@ -288,11 +293,6 @@
             "name": "10月13日 (二)",
             "url": "https://www.youtube-nocookie.com/embed/SF2HDgJaZuk?autoplay=1",
             "title": "Chided on childcare | CTV News Vancouver at Six for October 13, 2026"
-          },
-          {
-            "name": "10月09日 (五)",
-            "url": "https://www.youtube-nocookie.com/embed/r1I6Mekjerc?autoplay=1",
-            "title": "Whirlwind of election promises | CTV News Vancouver at Six for October 9, 2026"
           }
         ]
       },
@@ -310,7 +310,7 @@
         ]
       }
     ],
-    "updatedAt": "2026-10-17T20:40:20.294279"
+    "updatedAt": "2026-10-19T21:23:20.301888"
   },
   {
     "id": "1025585",
