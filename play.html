@@ -298,6 +298,15 @@
         resumeTime = paramTime;
       }
 
+      // Clean stale 't' parameter from address bar so browser refresh uses latest playback progress
+      try {
+        const cleanUrl = new URL(window.location.href);
+        if (cleanUrl.searchParams.has('t')) {
+          cleanUrl.searchParams.delete('t');
+          window.history.replaceState(null, '', cleanUrl.pathname + cleanUrl.search);
+        }
+      } catch (e) {}
+
       // Update UI hints if resuming from previous history
       const historyBadge = document.getElementById('historyResumeBadge');
       const centerText = document.querySelector('.center-play-text');
@@ -575,6 +584,16 @@
       hasAppliedResume = false;
       const ep = source.episodes[eIdx];
 
+      // Update URL query parameters in address bar so reload maintains accurate src/ep and clears stale t
+      try {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('id', currentVideo.id);
+        currentUrl.searchParams.set('src', sIdx);
+        currentUrl.searchParams.set('ep', eIdx);
+        currentUrl.searchParams.delete('t');
+        window.history.replaceState(null, '', currentUrl.pathname + currentUrl.search);
+      } catch (e) {}
+
       // Update UI active buttons
       document.querySelectorAll('.episode-btn').forEach(b => b.classList.remove('active'));
       const activeBtn = document.getElementById(`ep-btn-${sIdx}-${eIdx}`);
@@ -824,29 +843,42 @@
     }
 
     function setupPlayerEvents() {
-      // Auto save watch progress every 5s (only after past 3s to avoid overwriting on init)
+      // Auto save watch progress helper
       let lastSave = 0;
-      videoEl.addEventListener('timeupdate', () => {
+      function saveWatchProgress(force = false) {
+        if (!currentVideo || !videoEl) return;
+        const cur = videoEl.currentTime;
+        if (isNaN(cur) || cur <= 3) return;
+        if (!hasAppliedResume && pendingResumeTime > 5) return;
+
         const now = Date.now();
-        if (now - lastSave > 4000 && videoEl.currentTime > 3) {
-          lastSave = now;
-          const src = currentVideo.sources[currentSourceIdx];
-          const ep = src && src.episodes ? src.episodes[currentEpIdx] : null;
-          WatchHistory.save(
-            currentVideo,
-            currentSourceIdx,
-            currentEpIdx,
-            ep ? ep.name : '',
-            videoEl.currentTime,
-            videoEl.duration
-          );
-        }
+        if (!force && (now - lastSave < 2000)) return;
+        lastSave = now;
+
+        const src = currentVideo.sources && currentVideo.sources[currentSourceIdx];
+        const ep = src && src.episodes ? src.episodes[currentEpIdx] : null;
+        WatchHistory.save(
+          currentVideo,
+          currentSourceIdx,
+          currentEpIdx,
+          ep ? ep.name : '',
+          cur,
+          videoEl.duration || 0
+        );
+      }
+
+      videoEl.addEventListener('timeupdate', () => {
+        saveWatchProgress(false);
       });
 
-      // User manually seeked/scrubbed video timeline -> invalidate initial pending resume time
+      // User manually seeked/scrubbed video timeline -> invalidate initial pending resume time and save immediately
       videoEl.addEventListener('seeking', () => {
         pendingResumeTime = 0;
         hasAppliedResume = true;
+      });
+
+      videoEl.addEventListener('seeked', () => {
+        saveWatchProgress(true);
       });
 
       // Auto play next episode on end
@@ -866,6 +898,7 @@
       });
 
       videoEl.addEventListener('pause', () => {
+        saveWatchProgress(true);
         if (videoEl.currentTime < videoEl.duration && loadingOverlay.style.display !== 'flex') {
           const centerOverlay = document.getElementById('centerPlayOverlay');
           if (centerOverlay) {
@@ -876,6 +909,14 @@
             }
           }
         }
+      });
+
+      // Immediately save progress before browser reload / tab close / back navigation
+      window.addEventListener('beforeunload', () => {
+        saveWatchProgress(true);
+      });
+      window.addEventListener('pagehide', () => {
+        saveWatchProgress(true);
       });
 
       videoEl.addEventListener('playing', () => {

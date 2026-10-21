@@ -273,7 +273,7 @@
         let href = `play.html?id=${encodeURIComponent(video.id)}`;
         let historyBadge = '';
         if (hist && hist.currentTime > 5) {
-          href += `&src=${hist.sourceIndex}&ep=${hist.epIndex}&t=${hist.currentTime}`;
+          href += `&src=${hist.sourceIndex}&ep=${hist.epIndex}`;
           historyBadge = `<span class="poster-history-badge">看到 ${formatTime(hist.currentTime)}</span>`;
         }
         card.href = href;
