@@ -385,6 +385,9 @@
       return '普通話';
     }
 
+    const EP_PAGE_SIZE = 50;
+    const sourceActiveChunks = {};
+
     function renderSourcesAndEpisodes() {
       const container = document.getElementById('sourcesContainer');
       container.innerHTML = '';
@@ -417,42 +420,21 @@
         `;
         sec.appendChild(header);
 
+        // Chunk tabs bar for large episode lists (> 50 episodes)
+        const chunkBar = document.createElement('div');
+        chunkBar.className = 'ep-chunk-tabs-bar';
+        chunkBar.id = `chunk-bar-${sIdx}`;
+        sec.appendChild(chunkBar);
+
         const epGrid = document.createElement('div');
         epGrid.className = 'episode-grid';
-
-        if (source.episodes && source.episodes.length > 0) {
-          source.episodes.forEach((ep, eIdx) => {
-            const btn = document.createElement('div');
-            btn.className = 'episode-btn';
-            btn.id = `ep-btn-${sIdx}-${eIdx}`;
-            btn.textContent = ep.name || `第${eIdx + 1}集`;
-            btn.title = ep.name;
-            btn.setAttribute('tabindex', '0');
-            btn.setAttribute('role', 'button');
-            btn.onclick = () => {
-              const isCurrent = (sIdx === currentSourceIdx && eIdx === currentEpIdx);
-              let targetResume = 0;
-              if (isCurrent) {
-                if (videoEl && videoEl.currentTime > 5) {
-                  targetResume = videoEl.currentTime;
-                } else if (pendingResumeTime > 5) {
-                  targetResume = pendingResumeTime;
-                }
-              }
-              playEpisode(sIdx, eIdx, targetResume, true);
-              const playerWrap = document.getElementById('playerWrapper');
-              if (playerWrap && typeof TvSpatialNav !== 'undefined') {
-                TvSpatialNav.focusElement(playerWrap);
-              }
-            };
-            epGrid.appendChild(btn);
-          });
-        } else {
-          epGrid.innerHTML = '<span style="color: #999; font-size: 12px;">該線路暫無集數</span>';
-        }
-
+        epGrid.id = `ep-grid-${sIdx}`;
         sec.appendChild(epGrid);
+
         container.appendChild(sec);
+
+        // Render episodes for this source with chunking if needed
+        renderSourceEpisodes(sIdx);
       });
 
       // Automatically test network latency for all sources
@@ -467,6 +449,97 @@
           TvSpatialNav.focusElement(target);
         }
       }, 180);
+    }
+
+    function renderSourceEpisodes(sIdx, forceChunkIdx = null) {
+      const source = currentVideo && currentVideo.sources && currentVideo.sources[sIdx];
+      if (!source || !source.episodes) return;
+
+      const epGrid = document.getElementById(`ep-grid-${sIdx}`);
+      const chunkBar = document.getElementById(`chunk-bar-${sIdx}`);
+      if (!epGrid) return;
+
+      const totalEps = source.episodes.length;
+      if (totalEps === 0) {
+        if (chunkBar) chunkBar.style.display = 'none';
+        epGrid.innerHTML = '<span style="color: #999; font-size: 12px;">該線路暫無集數</span>';
+        return;
+      }
+
+      if (totalEps <= EP_PAGE_SIZE) {
+        if (chunkBar) chunkBar.style.display = 'none';
+        epGrid.innerHTML = '';
+        renderEpisodeButtons(sIdx, 0, totalEps, epGrid);
+        return;
+      }
+
+      // Large series: render chunk tabs
+      if (chunkBar) {
+        chunkBar.style.display = 'flex';
+        chunkBar.innerHTML = '';
+        const totalChunks = Math.ceil(totalEps / EP_PAGE_SIZE);
+
+        let activeChunk = (forceChunkIdx !== null) ? forceChunkIdx : (sourceActiveChunks[sIdx] || 0);
+        if (activeChunk >= totalChunks) activeChunk = 0;
+        sourceActiveChunks[sIdx] = activeChunk;
+
+        for (let c = 0; c < totalChunks; c++) {
+          const startNum = c * EP_PAGE_SIZE + 1;
+          const endNum = Math.min((c + 1) * EP_PAGE_SIZE, totalEps);
+          const tabBtn = document.createElement('button');
+          tabBtn.type = 'button';
+          tabBtn.className = 'ep-chunk-tab-btn' + (c === activeChunk ? ' active' : '');
+          tabBtn.textContent = `${startNum}-${endNum}`;
+          tabBtn.onclick = (e) => {
+            e.stopPropagation();
+            sourceActiveChunks[sIdx] = c;
+            renderSourceEpisodes(sIdx, c);
+          };
+          chunkBar.appendChild(tabBtn);
+        }
+
+        const startIdx = activeChunk * EP_PAGE_SIZE;
+        const endIdx = Math.min((activeChunk + 1) * EP_PAGE_SIZE, totalEps);
+        epGrid.innerHTML = '';
+        renderEpisodeButtons(sIdx, startIdx, endIdx, epGrid);
+      }
+    }
+
+    function renderEpisodeButtons(sIdx, startIdx, endIdx, epGrid) {
+      const source = currentVideo.sources[sIdx];
+      for (let eIdx = startIdx; eIdx < endIdx; eIdx++) {
+        const ep = source.episodes[eIdx];
+        const btn = document.createElement('div');
+        btn.className = 'episode-btn' + (sIdx === currentSourceIdx && eIdx === currentEpIdx ? ' active' : '');
+        btn.id = `ep-btn-${sIdx}-${eIdx}`;
+        let displayLabel = ep.name || `第${eIdx + 1}集`;
+        if (displayLabel.length > 5) {
+          const m = displayLabel.match(/\d+/);
+          const epNum = m ? parseInt(m[0], 10) : (eIdx + 1);
+          displayLabel = 'EP' + String(epNum).padStart(epNum < 100 ? 2 : 3, '0');
+        }
+        btn.textContent = displayLabel;
+        btn.title = ep.name || displayLabel;
+        btn.setAttribute('tabindex', '0');
+        btn.setAttribute('role', 'button');
+        btn.onclick = () => {
+          const isCurrent = (sIdx === currentSourceIdx && eIdx === currentEpIdx);
+          let targetResume = 0;
+          if (isCurrent) {
+            if (videoEl && videoEl.currentTime > 5) {
+              targetResume = videoEl.currentTime;
+            } else if (pendingResumeTime > 5) {
+              targetResume = pendingResumeTime;
+            }
+          }
+          playEpisode(sIdx, eIdx, targetResume, true);
+          const playerWrap = document.getElementById('playerWrapper');
+          if (playerWrap && typeof TvSpatialNav !== 'undefined') {
+            TvSpatialNav.focusElement(playerWrap);
+          }
+        };
+        epGrid.appendChild(btn);
+      }
     }
 
     async function measureStreamLatency(url) {
@@ -594,11 +667,44 @@
         window.history.replaceState(null, '', currentUrl.pathname + currentUrl.search);
       } catch (e) {}
 
+      // Switch chunk tab if needed for large series
+      if (source.episodes && source.episodes.length > EP_PAGE_SIZE) {
+        const neededChunk = Math.floor(eIdx / EP_PAGE_SIZE);
+        if (sourceActiveChunks[sIdx] !== neededChunk) {
+          sourceActiveChunks[sIdx] = neededChunk;
+          renderSourceEpisodes(sIdx, neededChunk);
+        }
+      }
+
       // Update UI active buttons
       document.querySelectorAll('.episode-btn').forEach(b => b.classList.remove('active'));
       const activeBtn = document.getElementById(`ep-btn-${sIdx}-${eIdx}`);
       if (activeBtn) {
         activeBtn.classList.add('active');
+      }
+
+      // Dynamic on-demand stream resolution for unresolved episodes
+      const isUnresolvedXgct = (ep.chapter_id || (ep.url && ep.url.includes('twxgct.com'))) && (!ep.url || (!ep.url.includes('.m3u8') && !ep.url.includes('player.htm') && !ep.url.includes('clean-player')));
+      if (isUnresolvedXgct) {
+        const cid = ep.chapter_id || (ep.url.match(/chapter_id=([a-zA-Z0-9_-]+)/) || ep.url.match(/\/video\/[^\/]+\/([a-zA-Z0-9_-]+)\.html/) || [])[1];
+        if (cid) {
+          fetch('/api/resolve-episode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chapter_id: cid })
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data && data.success) {
+              const isClean = (source.name && (source.name.includes('免廣告') || source.name.includes('秒播')));
+              ep.url = (isClean && data.clean_player) ? data.clean_player : (data.clean_player || data.pframe || data.m3u8);
+              if (currentSourceIdx === sIdx && currentEpIdx === eIdx) {
+                loadStreamUrl(ep.url, resumeTime, autoPlay);
+              }
+            }
+          })
+          .catch(() => {});
+        }
       }
 
       const lineName = source.name || ('線路' + (sIdx + 1));
@@ -610,7 +716,7 @@
       const centerOverlay = document.getElementById('centerPlayOverlay');
       const prefixEl = document.getElementById('playStatusPrefix');
 
-      const isEmbed = ep.url && !ep.url.toLowerCase().includes('.m3u8') && !ep.url.toLowerCase().includes('.mp4') && ep.url.startsWith('http');
+      const isEmbed = ep.url && !ep.url.toLowerCase().includes('.m3u8') && !ep.url.toLowerCase().includes('.mp4') && (ep.url.startsWith('http') || ep.url.startsWith('/api/clean-player'));
 
       if (autoPlay) {
         if (centerOverlay) centerOverlay.style.display = 'none';
@@ -684,7 +790,7 @@
       const embedFrame = document.getElementById('embedPlayerFrame');
       const playerWrap = document.getElementById('playerWrapper');
       const extBtn = document.getElementById('playerFloatExternalBtn');
-      const isEmbed = !streamUrl.toLowerCase().includes('.m3u8') && !streamUrl.toLowerCase().includes('.mp4') && streamUrl.startsWith('http');
+      const isEmbed = !streamUrl.toLowerCase().includes('.m3u8') && !streamUrl.toLowerCase().includes('.mp4') && (streamUrl.startsWith('http') || streamUrl.startsWith('/api/clean-player'));
 
       if (isEmbed) {
         videoEl.pause();
@@ -722,7 +828,7 @@
         }
 
         if (embedFrame) {
-          embedFrame.referrerPolicy = 'strict-origin-when-cross-origin';
+          embedFrame.referrerPolicy = 'no-referrer';
           embedFrame.style.display = 'block';
           if (embedFrame.src !== streamUrl) {
             embedFrame.src = streamUrl;
@@ -744,14 +850,27 @@
         videoEl.style.display = 'block';
       }
 
+      // West Melon (xgct) safety filter: direct to genuine 720p stream to avoid 1080p bait/corrupted stream (1:52:19)
+      if (streamUrl && streamUrl.includes('xgct-video.bzcdn.net') && streamUrl.endsWith('/playlist.m3u8')) {
+        streamUrl = streamUrl.replace('/playlist.m3u8', '/1280x720/video.m3u8');
+      }
+
       const isM3u8 = streamUrl.toLowerCase().includes('.m3u8');
 
       if (isM3u8 && Hls.isSupported()) {
+        const isXgct = streamUrl.includes('xgct-video.bzcdn.net');
         hls = new Hls({
           enableWorker: true,
           lowLatencyMode: false,
           manifestLoadingTimeOut: 12000,
-          manifestLoadingMaxRetry: 3,
+          manifestLoadingMaxRetry: 6,
+          // For xgct, gentle pacing buffer limits to prevent triggering Nginx 429 burst rate limits
+          maxBufferLength: isXgct ? 10 : 30,
+          maxMaxBufferLength: isXgct ? 16 : 600,
+          maxBufferSize: isXgct ? (10 * 1000 * 1000) : (60 * 1000 * 1000),
+          fragLoadingMaxRetry: isXgct ? 15 : 6,
+          fragLoadingRetryDelay: isXgct ? 3000 : 1000,
+          fragLoadingMaxRetryTimeout: isXgct ? 80000 : 20000,
           startPosition: resumeTime > 5 ? resumeTime : -1
         });
         hls.loadSource(streamUrl);
@@ -759,6 +878,17 @@
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           loadingOverlay.style.display = 'none';
+
+          if (streamUrl.includes('xgct-video.bzcdn.net') && hls.levels && hls.levels.length > 0) {
+            let maxSafeLevel = 0;
+            hls.levels.forEach((lvl, idx) => {
+              if (lvl.height && lvl.height <= 720) {
+                maxSafeLevel = idx;
+              }
+            });
+            hls.autoLevelCapping = maxSafeLevel;
+          }
+
           if (resumeTime > 5) {
             try {
               videoEl.currentTime = resumeTime;
@@ -774,8 +904,15 @@
           if (data.fatal) {
             switch (data.type) {
               case Hls.ErrorTypes.NETWORK_ERROR:
-                console.warn('Network error encountered, trying recovery...');
-                hls.startLoad();
+                console.warn('Network error encountered, data:', data);
+                if (data.response && data.response.code === 429) {
+                  showTvToast('⏳ 服務器訪問頻率限制，正在排隊重試...');
+                  setTimeout(() => {
+                    if (hls) hls.startLoad();
+                  }, 5000);
+                } else {
+                  hls.startLoad();
+                }
                 break;
               case Hls.ErrorTypes.MEDIA_ERROR:
                 console.warn('Media error encountered, trying recovery...');
