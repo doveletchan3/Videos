@@ -3,155 +3,20 @@
     "id": "1013231",
     "title": "女神配對計劃2",
     "poster": "data/posters/1013231.jpg",
-    "category": "電影",
-    "subcategory": "最新",
+    "category": "劇集",
+    "subcategory": "國產劇",
     "tags": [
       "熱門",
-      "最新",
-      "莫文浩/林盛斌 , 何沛珈 , 郭珮文 , 陳若思 , 俞可程"
+      "國產劇",
+      "中國香港"
     ],
     "details": {
-      "alias": "2026",
-      "year": "中國香港",
-      "region": "莫文浩/林盛斌 , 何沛珈 , 郭珮文 , 陳若思 , 俞可程",
-      "actors": ""
+      "alias": "",
+      "year": "2026",
+      "region": "中國香港",
+      "actors": "莫文浩/林盛斌 , 何沛珈 , 郭珮文 , 陳若思 , 俞可程"
     },
     "sources": [
-      {
-        "source_index": 1,
-        "source_id": "21273974",
-        "name": "線路1",
-        "episode_count": 9,
-        "episodes": [
-          {
-            "name": "第1集",
-            "url": "https://fengbao12.com/video/nvshenpeiduijihua2/c3213999d45a/index.m3u8"
-          },
-          {
-            "name": "第2集",
-            "url": "https://fengbao12.com/video/nvshenpeiduijihua2/c74649ae68b4/index.m3u8"
-          },
-          {
-            "name": "第3集",
-            "url": "https://fengbao12.com/video/nvshenpeiduijihua2/16263dbb6e71/index.m3u8"
-          },
-          {
-            "name": "第4集",
-            "url": "https://fengbao13.com/video/nvshenpeiduijihua2/cd8f2fe541a8/index.m3u8"
-          },
-          {
-            "name": "第5集",
-            "url": "https://v.fengbao14.com/video/nvshenpeiduijihua2/66dab85d3200/index.m3u8"
-          },
-          {
-            "name": "第6集",
-            "url": "https://v.fengbao14.com/video/nvshenpeiduijihua2/2515ce5a7c2e/index.m3u8"
-          },
-          {
-            "name": "第7集",
-            "url": "https://v.fengbao14.com/video/nvshenpeiduijihua2/620ae752a364/index.m3u8"
-          },
-          {
-            "name": "第8集",
-            "url": "https://v.fengbao14.com/video/nvshenpeiduijihua2/be2cf1688f00/index.m3u8"
-          },
-          {
-            "name": "第9集",
-            "url": "https://v.fengbao14.com/video/nvshenpeiduijihua2/61942d5971ab/index.m3u8"
-          }
-        ],
-        "lang": "普通話"
-      },
-      {
-        "source_index": 2,
-        "source_id": "21275482",
-        "name": "線路2",
-        "episode_count": 9,
-        "episodes": [
-          {
-            "name": "第01集",
-            "url": "https://v.lzcdn28.com/20260907/15417_3f2ab112/index.m3u8"
-          },
-          {
-            "name": "第02集",
-            "url": "https://v.lzcdn28.com/20260914/15713_0313df87/index.m3u8"
-          },
-          {
-            "name": "第03集",
-            "url": "https://v.lzcdn28.com/20260921/15997_e9dd5082/index.m3u8"
-          },
-          {
-            "name": "第04集",
-            "url": "https://v.lzcdn28.com/20260928/16282_675289c7/index.m3u8"
-          },
-          {
-            "name": "第05集",
-            "url": "https://v.lzcdn28.com/20261005/16568_bb471ba7/index.m3u8"
-          },
-          {
-            "name": "第06集",
-            "url": "https://v.lzcdn28.com/20261012/16872_39e66a8d/index.m3u8"
-          },
-          {
-            "name": "第07集",
-            "url": "https://v.lzcdn28.com/20261019/17135_2764a48c/index.m3u8"
-          },
-          {
-            "name": "第08集",
-            "url": "https://v.lzcdn28.com/20261026/17478_bae4bc73/index.m3u8"
-          },
-          {
-            "name": "第09集",
-            "url": "https://v.lzcdn28.com/20261101/17727_9cdd7f46/index.m3u8"
-          }
-        ],
-        "lang": "普通話"
-      },
-      {
-        "source_index": 3,
-        "source_id": "21275534",
-        "name": "線路3",
-        "episode_count": 9,
-        "episodes": [
-          {
-            "name": "第01集",
-            "url": "https://vip.dytt-tvs.com/20260907/36014_1b9f12a8/index.m3u8"
-          },
-          {
-            "name": "第02集",
-            "url": "https://vip.dytt-tvs.com/20260914/36971_8ad626c8/index.m3u8"
-          },
-          {
-            "name": "第03集",
-            "url": "https://vip.dytt-tvs.com/20260921/37892_991bf57f/index.m3u8"
-          },
-          {
-            "name": "第04集",
-            "url": "https://vip.dytt-tvs.com/20260928/38828_1bbe51d5/index.m3u8"
-          },
-          {
-            "name": "第05集",
-            "url": "https://vip.dytt-tvs.com/20261005/39837_20fcec08/index.m3u8"
-          },
-          {
-            "name": "第06集",
-            "url": "https://vip.dytt-tvs.com/20261012/40783_a552e1db/index.m3u8"
-          },
-          {
-            "name": "第07集",
-            "url": "https://vip.dytt-tvs.com/20261019/41778_3434cfa4/index.m3u8"
-          },
-          {
-            "name": "第08集",
-            "url": "https://vip.dytt-tvs.com/20261026/42738_5b97f793/index.m3u8"
-          },
-          {
-            "name": "第09集",
-            "url": "https://vip.dytt-tvs.com/20261101/43617_10ccbc80/index.m3u8"
-          }
-        ],
-        "lang": "普通話"
-      },
       {
         "source_index": 4,
         "source_id": "21373846",
@@ -195,7 +60,7 @@
             "url": "https://player.yzzyvip-35.com/20261102/19951_4ffa03ba/index.m3u8"
           }
         ],
-        "lang": "普通話"
+        "lang": "粵語"
       },
       {
         "source_index": 5,
@@ -236,51 +101,55 @@
             "url": "https://bfikuncdn.com/20261026/HhJ0bw3E/index.m3u8"
           }
         ],
-        "lang": "普通話"
+        "lang": "粵語"
       },
       {
-        "source_index": 8,
-        "source_id": "21374628",
-        "name": "線路8",
-        "episode_count": 8,
+        "source_index": 6,
+        "source_id": "21275497",
+        "name": "線路6",
+        "episode_count": 9,
         "episodes": [
           {
             "name": "第01集",
-            "url": "https://play.ly166.com:65/videos/20260914/6aa7f3d95c14f34ca596da04/dg9d9f/index.m3u8"
+            "url": "https://svip.ryplay17.com/20260907/21222_18a9f607/index.m3u8"
           },
           {
             "name": "第02集",
-            "url": "https://play.ly166.com:65/videos/20260914/6aa7f3d95c14f34ca596da02/c7b5g8/index.m3u8"
+            "url": "https://svip.ryplay17.com/20260914/21518_35f42bdf/index.m3u8"
           },
           {
             "name": "第03集",
-            "url": "https://play.ly166.com:65/videos/20260922/6ab27896339f684cacf73a22/8b0a50/index.m3u8"
+            "url": "https://svip.ryplay17.com/20260921/21803_6ae155df/index.m3u8"
           },
           {
             "name": "第04集",
-            "url": "https://play.ly166.com:65/videos/20260930/6abd21e2339f684cac635778/5bg574/index.m3u8"
+            "url": "https://cdn.ryplay12.com/20260928/42011_508cd81e/index.m3u8"
           },
           {
             "name": "第05集",
-            "url": "https://play.ly166.com:65/videos/20261019/6ad62a67339f684cace60d66/cgb035/index.m3u8"
+            "url": "https://svip.ryiplay21.com/20261005/254_6ffe134c/index.m3u8"
           },
           {
             "name": "第06集",
-            "url": "https://play.ly166.com:65/videos/20261019/6ad62a67339f684cace60d6d/ad4d2e/index.m3u8"
+            "url": "https://svip.ryiplay21.com/20261012/566_a8a6185e/index.m3u8"
           },
           {
             "name": "第07集",
-            "url": "https://play.ly166.com:65/videos/20261019/6ad62a67339f684cace60d68/dd14af/index.m3u8"
+            "url": "https://svip.ryiplay21.com/20261019/830_d226a4c4/index.m3u8"
           },
           {
             "name": "第08集",
-            "url": "https://play.ly166.com:65/videos/20261026/6adf4851475251072c93aa44/g12236/index.m3u8"
+            "url": "https://svip.ryiplay21.com/20261026/1167_d9c71867/index.m3u8"
+          },
+          {
+            "name": "第09集",
+            "url": "https://svip.ryiplay21.com/20261101/1418_7ae7294d/index.m3u8"
           }
         ],
-        "lang": "普通話"
+        "lang": "粵語"
       }
     ],
-    "updatedAt": "2026-11-02T14:28:28.414959"
+    "updatedAt": "2026-11-02T14:37:17.177840"
   },
   {
     "id": "xgct_haizeiwanghanghaiwangyueyu-weitianrongyilang",
